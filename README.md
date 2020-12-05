@@ -21,7 +21,6 @@ The development and launch of the platform will be split into several phases as 
 + Expose NBA score data via Chainlink oracle
 + Build Ethereum smart contract with the following features:
   - Accept tokenized bets from addresses on outcome of games
-  - Listen for game completion events
   - Settle bets of completed games by paying out winning addresses using static 1:1 payout odds
 + Deploy contract to Ethereum Testnet
 + Build web app front end with the following features:
