@@ -18,22 +18,22 @@ The development and launch of the project will be split into several phases as d
 ### Phase 0
 
 + Build scraper to aggregate latest NBA scores
-+ Expose NBA score data through Chainlink oracle
++ Expose NBA score data via Chainlink oracle
 + Build Ethereum smart contract with the following features:
-  + Accept tokenized bets from addresses on outcome of games
-  + Listen for game completion events
-  + Settle bets of completed games by paying out winning addresses using static 1:1 payout odds
+  - Accept tokenized bets from addresses on outcome of games
+  - Listen for game completion events
+  - Settle bets of completed games by paying out winning addresses using static 1:1 payout odds
 + Deploy contract to Ethereum Testnet
 + Build web app front end with the following features:
-  + Connect to Metamask wallet
-  + Display all scheduled NBA games eligible for betting
-  + Accept bets on outcome of games
-  + Display current bets for connected wallet addresses
-  + Display historical bet results for connected wallet addresses
+  - Connect to Metamask wallet
+  - Display all scheduled NBA games eligible for betting
+  - Accept bets on outcome of games
+  - Display current bets for connected wallet addresses
+  - Display historical bet results for connected wallet addresses
   
 ### Phase 1
 
-+ Add automated market making
++ Implement automated market making
 + Use third-party Chainlink oracles to source score data
 
 ### Phase 2
