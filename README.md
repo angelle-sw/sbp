@@ -11,7 +11,11 @@ Provide a fully transparent, highly liquid, decentralized betting platform with 
 + Ethereum smart contracts
 + Chainlink oracles
 
-## Phase 0
+## Plan
+
+The development and launch of the project will be split into several phases as detailed below.
+
+### Phase 0
 
 + Build scraper to aggregate latest NBA scores
 + Expose NBA score data through Chainlink oracle
@@ -27,7 +31,16 @@ Provide a fully transparent, highly liquid, decentralized betting platform with 
   + Display current bets for connected wallet addresses
   + Display historical bet results for connected wallet addresses
   
-## Phase 1
+### Phase 1
 
 + Add automated market making
 + Use third-party Chainlink oracles to source score data
+
+### Phase 2
+
++ Add automated testing to validate smart contract edge scenarios
++ Determine fees and business model
+
+### Phase 3
+
++ Deploy contract to Ethereum mainnet
