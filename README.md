@@ -13,7 +13,7 @@ Provide a fully transparent, highly liquid, decentralized betting platform with 
 
 ## Plan
 
-The development and launch of the project will be split into several phases as detailed below.
+The development and launch of the platform will be split into several phases as detailed below.
 
 ### Phase 0
 
