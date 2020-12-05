@@ -11,7 +11,7 @@ Provide a fully transparent, highly liquid, decentralized betting platform with 
 + Ethereum smart contracts
 + Chainlink oracles
 
-## Version 1: Phase 0
+## Phase 0
 
 + Build scraper to aggregate latest NBA scores
 + Expose NBA score data through Chainlink oracle
@@ -27,7 +27,7 @@ Provide a fully transparent, highly liquid, decentralized betting platform with 
   + Display current bets for connected wallet addresses
   + Display historical bet results for connected wallet addresses
   
-## Version 1: Phase 1
+## Phase 1
 
 + Add automated market making
 + Use third-party Chainlink oracles to source score data
