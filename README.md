@@ -1,27 +1,61 @@
 # sbp
 
-Sports/event betting platform powered by Ethereum smart contracts with automated market making.
+Decentralized sports & event betting platform powered by Ethereum smart contracts and automated market making.
 
-## Goals
+## Core Concepts
 
-Provide a fully transparent, highly liquid, decentralized betting platform with low transaction costs and instant payouts.
+### Betting
 
-## Technologies
+Any Ethereum wallet can place bets on an event by calling the `placeBet` method on the smart contract and sending a bet option and wager amount in the form of ETH tokens.
 
-+ Ethereum smart contracts
-+ Chainlink oracles
+This process will be facilitated by a web app which displays all events eligible for betting and allowing users to claim payouts for won bets.
+
+Users will transfer funds and interact with the smart contract by connecting a Metamask wallet.
+
+### Staking
+
+In order to create a highly liquid market, the platform will incentivize users to stake funds into a liquidity pool, which will be used to payout winning bets. Having a highly liquid pool ensures that, no matter which side wins a bet, there is enough ETH in the pool to pay out all the winners, even if the platform loses money overall.
+
+To incentivize stakers, the platform can offer a percentage cut of the platform fee to the liquidity pool, where each liquidity provider earns a staking reward in proportion to the amount of ETH they are staking relative to the overall pool.
+
+With this model, early stakers will potentially make up a large percentage of the liquidity pool and therefore earn high rewards, but as more stakers add liquidity, it will lower the early stakers' earnings, as they now make up a smaller percentage of the liquidity pool.
+
+This creates a self-correcting system -- in scenarios where there is a low amount of liquidity, people will be more incentivized to stake because rewards will be higher; in contrast, in scenarios where there is excess liquidity, rewards will be lower, incentivizing stakers to exit the liquidity pool and deploy their capital into something more productive.
+
+### Odds making
+
+One of the main project challenges is defining the initial payout odds for an event, which in traditional sports betting is usually done by a combination of proprietary computer algorithms and "experts".
+
+These initial odds could potentially be informed using Chainlink oracles to get the initial sports betting odds defined by Vegas and global sportsbooks.
+
+Another approach is to allow anyone on the platform to create a new betting market for an event (for which the odds will be auto-adjusted as bets come in from both sides), and staking an amount of ETH into the pool to sufficiently cover payouts for either result.
+
+Odds makers will be incentivized to set the initial odds to align as closely as possible with the real world expected outcome in order to maximize their profit by having a balanced book; this is reflective of how most traditional sportsbooks make money.
+
+### Governance
+
+The platform could potentially be governed by a decentralized autonomous organization (DAO), where holders of a platform-minted ERC20 governance token could cast votes to adopt or reject new proposals to the platform protocol.
+
+The token could be distributed as a reward to odds makers as a reward for maintaing platform events, proportional to the number of events they maintain relative to the total number of events on the platform.
+
+This token can be transferred and/or used by anyone to vote on proposals to the platform protocol.
 
 ## Plan
 
-The development and launch of the platform will be split into several phases as detailed below.
+The development and launch of the platform will be split into several phases as detailed below:
 
 ### Phase 0
+
++ Define platform protocol
+
+### Phase 1
 
 + Build scraper to aggregate latest NBA scores
 + Expose NBA score data via Chainlink oracle
 + Build Ethereum smart contract with the following features:
   - Accept tokenized bets from addresses on outcome of games
-  - Settle bets of completed games by paying out winning addresses using static 1:1 payout odds
+  - Allow bettors to claim payouts for bets won
+  - Payout winning bettors using static 1:1 payout odds
 + Deploy contract to Ethereum Testnet
 + Build web app front end with the following features:
   - Connect to Metamask wallet
@@ -29,16 +63,13 @@ The development and launch of the platform will be split into several phases as 
   - Accept bets on outcome of games
   - Display current bets for connected wallet addresses
   - Display historical bet results for connected wallet addresses
-  
-### Phase 1
-
-+ Implement automated market making
-+ Use third-party Chainlink oracles to source score data
 
 ### Phase 2
 
++ Implement automated market making
++ Use third-party Chainlink oracles to source score data
 + Add automated testing to validate smart contract edge scenarios
-+ Determine fees and business model
++ Solidify fees and business model
 
 ### Phase 3
 
