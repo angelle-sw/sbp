@@ -30,7 +30,7 @@ These initial odds could potentially be informed using Chainlink oracles to get 
 
 Another approach is to allow anyone on the platform to create a new betting market for an event (for which the odds will be auto-adjusted as bets come in from both sides), and staking an amount of ETH into the pool to sufficiently cover payouts for either result.
 
-Odds makers will be incentivized to set the initial odds to align as closely as possible with the real world expected outcome in order to maximize their profit by having a balanced book; this is reflective of how most traditional sportsbooks make money.
+With this model, odds makers will be incentivized to set the initial odds to align as closely as possible with the real world expected outcome in order to maximize their profit by having a balanced book; this is reflective of how most traditional sportsbooks make money.
 
 ### Governance
 
