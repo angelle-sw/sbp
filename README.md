@@ -36,7 +36,7 @@ With this model, odds makers will be incentivized to set the initial odds to ali
 
 The platform could potentially be governed by a decentralized autonomous organization (DAO), where holders of a platform-minted ERC20 governance token could cast votes to adopt or reject new proposals to the platform protocol.
 
-The token could be distributed as a reward to odds makers as a reward for maintaing platform events, proportional to the number of events they maintain relative to the total number of events on the platform.
+The token could be distributed as a reward to odds makers for maintaining platform events, proportional to the number of events they maintain relative to the total number of events on the platform.
 
 This token can be transferred and/or used by anyone to vote on proposals to the platform protocol.
 
