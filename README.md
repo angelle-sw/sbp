@@ -32,9 +32,17 @@ Another approach is to allow anyone on the platform to create a new betting mark
 
 With this model, odds makers will be incentivized to set the initial odds to align as closely as possible with the real world expected outcome in order to maximize their profit by having a balanced book; this is reflective of how most traditional sportsbooks make money.
 
+### Passive earning
+
+The platform can move betting pool funds into a decentralized lending platform like [Aave](https://aave.com) or [Compound](https://compound.finance) and earn interest from borrowers. This passive interest earning can be passed off to users of the platform in the form of better odds payouts and/or a betting rewards system.
+
+### Betting rewards system
+
+The platform can incentivize users to place bets by rewarding every placed bet with a number of reward points proportional to the size of the bet. Points could later be redeemed for ETH by calling the `redeemPointsForEth` method on the smart contract. These points could be tracked directly on the blockchain in a mapping of `address => pointsEarned`. Alternatively, the rewards points could be tokenized, allowing users to trade rewards tokens freely across wallets.
+
 ### Governance
 
-The platform could potentially be governed by a decentralized autonomous organization (DAO), where holders of a platform-minted ERC20 governance token could cast votes to adopt or reject new proposals to the platform protocol.
+The platform can potentially be governed by a decentralized autonomous organization (DAO), where holders of a platform-minted ERC20 governance token could cast votes to adopt or reject new proposals to the platform protocol.
 
 The token could be distributed as a reward to odds makers for maintaining platform events, proportional to the number of events they maintain relative to the total number of events on the platform.
 
