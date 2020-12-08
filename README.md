@@ -4,6 +4,10 @@ Decentralized sports & event betting platform powered by Ethereum smart contract
 
 ## Core Concepts
 
+### Event creation
+
+New betting events will initially be created by the founding team by calling a `createEvent` method on the smart contract. In the future, this event data could be requested from a Chainlink oracle.
+
 ### Betting
 
 Any Ethereum wallet can place bets on an event by calling the `placeBet` method on the smart contract and sending a bet option and wager amount in the form of ETH tokens.
@@ -11,6 +15,10 @@ Any Ethereum wallet can place bets on an event by calling the `placeBet` method 
 This process will be facilitated by a web app which displays all events eligible for betting and allowing users to claim payouts for won bets.
 
 Users will transfer funds and interact with the smart contract by connecting a Metamask wallet.
+
+### Outcome reporting
+
+Outcome reporting data will be sourced from Chainlink oracles.
 
 ### Staking
 
@@ -42,11 +50,14 @@ The platform can incentivize users to place bets by rewarding every placed bet w
 
 ### Governance
 
-The platform can potentially be governed by a decentralized autonomous organization (DAO), where holders of a platform-minted ERC20 governance token could cast votes to adopt or reject new proposals to the platform protocol.
+The platform will initially be bootstrapped and governed in large part by the founding team. As the community grows and the platform matures, governance
+will be incrementally transferred over to the community in the form of a decentralized autonomous organization (DAO).
 
-The token could be distributed as a reward to odds makers for maintaining platform events, proportional to the number of events they maintain relative to the total number of events on the platform.
+Holders of a platform-minted ERC20 governance token may cast votes to adopt and reject new proposals to the platform protocol.
 
-This token can be transferred and/or used by anyone to vote on proposals to the platform protocol.
+### Governance token distribution
+
+The governance token could be distributed as a reward to odds makers for maintaining platform events, proportional to the number of events they maintain relative to the total number of events on the platform.
 
 ## Plan
 
