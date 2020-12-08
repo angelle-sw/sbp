@@ -26,7 +26,7 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
-const { INFURA_TEST_ENDPOINT, WALLET_INDEX, WALLET_MNEMONIC } = process.env;
+const { TEST_ENDPOINT, WALLET_INDEX, WALLET_MNEMONIC } = process.env;
 
 module.exports = {
   /**
@@ -55,7 +55,7 @@ module.exports = {
       provider: function () {
         return new HDWalletProvider({
           mnemonic: WALLET_MNEMONIC,
-          providerOrUrl: INFURA_TEST_ENDPOINT,
+          providerOrUrl: TEST_ENDPOINT,
           addressIndex: WALLET_INDEX,
         });
       },

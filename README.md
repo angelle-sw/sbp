@@ -103,6 +103,14 @@ Clone the repository:
 $ git clone https://github.com/angelle-sw/sbp
 ```
 
+Create a `.env` file in the root of your repository:
+
+```sh
+TEST_ENDPOINT=<endpoint>
+WALLET_MNEMONIC=<wallet-mnemonic>
+WALLET_INDEX=<wallet-index>
+```
+
 Install dependencies:
 
 ```sh
