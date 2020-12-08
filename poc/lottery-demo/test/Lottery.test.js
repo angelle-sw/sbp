@@ -1,7 +1,9 @@
 const assert = require('assert');
 const ganache = require('ganache-cli');
 const Web3 = require('web3');
-const { bytecode, interface } = require('../compile');
+const { abi, evm } = require('../compile');
+
+const { object: bytecode } = evm.bytecode;
 
 const provider = ganache.provider();
 const web3 = new Web3(provider);
@@ -12,7 +14,7 @@ let lottery;
 beforeEach(async () => {
   accounts = await web3.eth.getAccounts();
 
-  lottery = await new web3.eth.Contract(JSON.parse(interface))
+  lottery = await new web3.eth.Contract(abi)
     .deploy({ data: bytecode })
     .send({ from: accounts[0], gas: '1000000' });
 });
@@ -107,7 +109,6 @@ describe('Lottery', () => {
     const finalBalance = await web3.eth.getBalance(accounts[0]);
 
     const difference = finalBalance - initialBalance;
-    const expected = Number(web3.utils.toWei('1.999953113999999', 'ether'));
 
     const contractBalanceAfter = await web3.eth.getBalance(
       lottery.options.address,
@@ -119,6 +120,6 @@ describe('Lottery', () => {
 
     assert.deepStrictEqual(players, []);
     assert.strictEqual(contractBalanceAfter, '0');
-    assert.strictEqual(difference, expected);
+    assert(difference > web3.utils.toWei('1.9', 'ether'));
   });
 });
