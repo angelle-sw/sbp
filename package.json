@@ -1,0 +1,28 @@
+{
+  "name": "sbp",
+  "version": "1.0.0",
+  "description": "Decentralized sports & event betting platform powered by Ethereum smart contracts and automated market making.",
+  "main": "index.js",
+  "scripts": {
+    "compile": "truffle compile",
+    "migrate": "truffle migrate",
+    "test": "truffle test"
+  },
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "smart contracts",
+    "evm",
+    "sports betting"
+  ],
+  "author": "angelle-sw",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.3.0",
+    "dotenv": "^8.2.0",
+    "ganache-cli": "^6.12.1",
+    "mocha": "^8.2.1",
+    "truffle-hdwallet-provider": "0.0.3",
+    "web3": "1.0.0-beta.26"
+  }
+}

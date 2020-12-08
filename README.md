@@ -68,7 +68,6 @@ The development and launch of the platform will be split into several phases as 
 + Define platform protocol
 
 ### Phase 1
-
 + Build scraper to aggregate latest NBA scores
 + Expose NBA score data via Chainlink oracle
 + Build Ethereum smart contract with the following features:
@@ -93,3 +92,37 @@ The development and launch of the platform will be split into several phases as 
 ### Phase 3
 
 + Deploy contract to Ethereum mainnet
+
+### Contributing
+
+Install and run [Ganache](https://www.trufflesuite.com/ganache).
+
+Clone the repository:
+
+```sh
+$ git clone https://github.com/angelle-sw/sbp
+```
+
+Install dependencies:
+
+```sh
+$ yarn
+```
+
+Compile contracts:
+
+```sh
+$ yarn compile
+```
+
+Run migrations:
+
+```sh
+$ yarn migrate
+```
+
+Run tests (implicitly compiles contracts and runs migrations before running):
+
+```sh
+$ yarn test
+```
