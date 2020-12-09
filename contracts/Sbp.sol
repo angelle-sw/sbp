@@ -38,25 +38,22 @@ contract Sbp is Ownable {
     return address(this).balance;
   }
 
+  function addEvent(string memory _option1, string memory _option2, uint64 _startTime) external onlyOwner {
+    Event memory newEvent = Event(_option1, _option2, _startTime, 0);
+    events.push(newEvent);
+  }
+
   function getEligibleBettingEvents() external view returns(Event[] memory) {
-    Event[] memory eligibleBettingEvents;
+    Event[] memory eligibleBettingEvents = new Event[](1);
     uint32 index = 0;
 
     for (uint32 i = 0; i < events.length; i++) {
-      Event memory existingEvent = events[i];
-
-      if (existingEvent.startTime > block.timestamp) {
-        eligibleBettingEvents[index] = existingEvent;
-        index++;
+      if (events[i].startTime > block.timestamp) {
+        eligibleBettingEvents[index] = events[i];
       }
     }
 
     return eligibleBettingEvents;
-  }
-
-  function addEvent(string memory _option1, string memory _option2, uint64 _startTime) external onlyOwner {
-    Event memory newEvent = Event(_option1, _option2, _startTime, 0);
-    events.push(newEvent);
   }
 
   function setEventResult(uint _eventId, uint8 _result) external onlyOwner {
@@ -68,6 +65,23 @@ contract Sbp is Ownable {
 
     Bet memory bet = Bet(msg.sender, _eventId, _option, payoutOdds, msg.value);
     bets.push(bet);
+  }
+
+  function getPlacedBets() external view returns (Bet[] memory) {
+    Bet[] memory addressBets;
+    uint32 index = 0;
+
+    for (uint32 i = 0; i < bets.length; i++) {
+      Bet memory bet = bets[i];
+      Event memory bettingEvent = events[bet.eventId];
+
+      if (bet.bettor == msg.sender && bettingEvent.result == 0) {
+        addressBets[index] = bet;
+        index++;
+      }
+    }
+
+    return addressBets;
   }
 
   function calculateBetPayoutAmount(Bet memory _bet) pure internal returns(uint) {
