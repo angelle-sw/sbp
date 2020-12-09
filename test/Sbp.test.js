@@ -1,4 +1,5 @@
 const Sbp = artifacts.require('Sbp');
+const truffleAssert = require('truffle-assertions');
 
 let instance;
 
@@ -100,6 +101,14 @@ contract('Sbp', accounts => {
     assert.equal(bet.option, 1);
   });
 
+  it('should reject bets placed after event has started', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 666);
+
+    truffleAssert.fails(
+      instance.placeBet.sendTransaction(0, 1)
+    );
+  });
+
   it('should get placed bets', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
     await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
@@ -116,5 +125,60 @@ contract('Sbp', accounts => {
 
     assert.equal(bets[1].eventId, 1);
     assert.equal(bets[1].option, 2);
+  });
+
+  it('should calculate bet payout amount', async () => {
+    const betAmount = 9999999999999999;
+
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: betAmount });
+
+    await instance.setEventResult.sendTransaction(0, 1);
+
+    const bet = await instance.getBet.call(0, { from: accounts[1] });
+
+    const betPayout = await instance.calculateBetPayoutAmount.call(bet, { from: accounts[1] });
+
+    assert.equal(betPayout, betAmount * 2);
+  });
+
+  it('should accept bet payout claim', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 9999999999999999 });
+    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: 9999999999999999 });
+
+    await instance.setEventResult.sendTransaction(0, 1);
+
+    const initialBalance = await web3.eth.getBalance(accounts[1]);
+
+    await instance.claimBetPayout.sendTransaction(0, { from: accounts[1] });
+
+    const currentBalance = await web3.eth.getBalance(accounts[1]);
+
+    assert.isAbove(parseInt(currentBalance, 10), parseInt(initialBalance, 10));
+    });
+
+  it('should reject bet payout claim if bet was lost', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 9999999999999999 });
+    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: 9999999999999999 });
+
+    await instance.setEventResult.sendTransaction(0, 2);
+
+    truffleAssert.fails(
+      instance.claimBetPayout.sendTransaction(0, { from: accounts[1] })
+    );
+  });
+
+  it('should reject bet payout claim if requested by foreign address', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 9999999999999999 });
+    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: 9999999999999999 });
+
+    await instance.setEventResult.sendTransaction(0, 1);
+
+    truffleAssert.fails(
+      instance.claimBetPayout.sendTransaction(0, { from: accounts[2] })
+    );
   });
 });

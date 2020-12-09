@@ -102,7 +102,7 @@ contract Sbp is Ownable {
     return placedBets;
   }
 
-  function calculateBetPayoutAmount(Bet memory _bet) pure internal returns(uint) {
+  function calculateBetPayoutAmount(Bet memory _bet) pure public returns(uint) {
     uint payoutMultiplier = SafeMath.div((_bet.payoutOdds[0] * scaleFactor), _bet.payoutOdds[1]);
     uint betProfit = uint(_bet.amount.mul(payoutMultiplier) / scaleFactor);
 
