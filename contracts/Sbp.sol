@@ -72,21 +72,25 @@ contract Sbp is Ownable {
     bets.push(bet);
   }
 
-  function getPlacedBets() external view returns (Bet[] memory) {
-    Bet[] memory addressBets;
-    uint32 index = 0;
+  function getBet(uint _betId) public view returns(Bet memory) {
+    return bets[_betId];
+  }
+
+  function getPlacedBets() external view returns(uint[] memory) {
+    uint[] memory placedBets = new uint[](bets.length);
+    uint index = 0;
 
     for (uint32 i = 0; i < bets.length; i++) {
       Bet memory bet = bets[i];
       Event memory bettingEvent = events[bet.eventId];
 
       if (bet.bettor == msg.sender && bettingEvent.result == 0) {
-        addressBets[index] = bet;
+        placedBets[index] = i;
         index++;
       }
     }
 
-    return addressBets;
+    return placedBets;
   }
 
   function calculateBetPayoutAmount(Bet memory _bet) pure internal returns(uint) {
