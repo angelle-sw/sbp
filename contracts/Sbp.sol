@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.4.22 <0.8.0;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -21,7 +22,7 @@ contract Sbp is Ownable {
   struct Event {
     string option1;
     string option2;
-    uint startTime;
+    uint64 startTime;
     uint8 result;
   }
 
@@ -37,7 +38,23 @@ contract Sbp is Ownable {
     return address(this).balance;
   }
 
-  function addEvent(string memory _option1, string memory _option2, uint _startTime) external onlyOwner {
+  function getEligibleBettingEvents() external view returns(Event[] memory) {
+    Event[] memory eligibleBettingEvents;
+    uint32 index = 0;
+
+    for (uint32 i = 0; i < events.length; i++) {
+      Event memory existingEvent = events[i];
+
+      if (existingEvent.startTime > block.timestamp) {
+        eligibleBettingEvents[index] = existingEvent;
+        index++;
+      }
+    }
+
+    return eligibleBettingEvents;
+  }
+
+  function addEvent(string memory _option1, string memory _option2, uint64 _startTime) external onlyOwner {
     Event memory newEvent = Event(_option1, _option2, _startTime, 0);
     events.push(newEvent);
   }
