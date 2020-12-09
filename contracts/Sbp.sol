@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.4.22 <0.8.0;
+pragma solidity >=0.6.0 <0.8.0;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -18,6 +18,8 @@ contract Sbp is Ownable {
   // Since Solidity does not support fixed point numbers, a scale factor is used to scale up the
   // payout odd factors when calculating the payout amount
   uint private constant scaleFactor = 1000000;
+
+  uint numberOfEvents = 0;
 
   struct Event {
     string option1;
@@ -39,21 +41,24 @@ contract Sbp is Ownable {
   }
 
   function addEvent(string memory _option1, string memory _option2, uint64 _startTime) external onlyOwner {
-    Event memory newEvent = Event(_option1, _option2, _startTime, 0);
-    events.push(newEvent);
+    events.push(Event(_option1, _option2, _startTime, 0));
   }
 
   function getEvent(uint _eventId) public view returns(Event memory) {
     return events[_eventId];
   }
 
-  function getEligibleBettingEvents() external view returns(uint[] memory) {
-    uint[] memory eligibleBettingEvents = new uint[](events.length);
+  function getEvents() public view returns(Event[] memory) {
+    return events;
+  }
+
+  function getEligibleBettingEvents() external view returns(Event[] memory) {
+    Event[] memory eligibleBettingEvents = new Event[](events.length);
     uint index = 0;
 
     for (uint32 i = 0; i < events.length; i++) {
       if (events[i].startTime > block.timestamp) {
-        eligibleBettingEvents[index] = i;
+        eligibleBettingEvents[index] = events[i];
         index++;
       }
     }
@@ -76,8 +81,12 @@ contract Sbp is Ownable {
     return bets[_betId];
   }
 
-  function getPlacedBets() external view returns(uint[] memory) {
-    uint[] memory placedBets = new uint[](bets.length);
+  function getBets() public view returns(Bet[] memory) {
+    return bets;
+  }
+
+  function getPlacedBets() external view returns(Bet[] memory) {
+    Bet[] memory placedBets = new Bet[](bets.length);
     uint index = 0;
 
     for (uint32 i = 0; i < bets.length; i++) {
@@ -85,7 +94,7 @@ contract Sbp is Ownable {
       Event memory bettingEvent = events[bet.eventId];
 
       if (bet.bettor == msg.sender && bettingEvent.result == 0) {
-        placedBets[index] = i;
+        placedBets[index] = bets[i];
         index++;
       }
     }

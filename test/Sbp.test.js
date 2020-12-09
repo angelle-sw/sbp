@@ -1,58 +1,120 @@
 const Sbp = artifacts.require('Sbp');
 
-contract('Sbp', async accounts => {
-  it('should get smart contract balance', async () => {
-    Sbp.deployed()
-      .then(instance => instance.balanceOf.call(accounts[0]))
-      .then(balance =>
-        assert.equal(
-          balance.valueOf(),
-          0
-        )
-      )
+let instance;
+
+contract('Sbp', accounts => {
+  beforeEach(async () => {
+    instance = await Sbp.new();
   });
 
-  it('should add event', async () => {
-    Sbp.deployed()
-      .then(instance => instance.addEvent.call("Charlotte", "OKC", 1608854400))
-      .then(instance =>
-        assert.equal(
-          instance.events,
-          {
-            option1: "Charlotte",
-            option2: "OKC",
-            startTime: 1608854400,
-            result: 0
-          }
-        )
-      )
+  it('should get smart contract balance', async () => {
+    const balance = await instance.balanceOf.call();
+
+    assert.equal(balance, 0);
+  });
+
+  it('should add events', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
+
+    const event1 = await instance.events.call(0);
+    const event2 = await instance.events.call(1);
+
+    assert.equal(event1.option1, 'Charlotte');
+    assert.equal(event1.option2, 'OKC');
+    assert.equal(event1.startTime, '32534524800');
+    assert.equal(event1.result, '0');
+
+    assert.equal(event2.option1, 'Boston');
+    assert.equal(event2.option2, 'Milwaukee');
+    assert.equal(event2.startTime, '32534611200');
+    assert.equal(event2.result, '0');
+  });
+
+  it('should get events', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
+
+    const events = await instance.getEvents.call();
+
+    assert.equal(events.length, 2);
+
+    assert.equal(events[0].option1, 'Charlotte');
+    assert.equal(events[0].option2, 'OKC');
+    assert.equal(events[0].startTime, '32534524800');
+    assert.equal(events[0].result, '0');
+
+    assert.equal(events[1].option1, 'Boston');
+    assert.equal(events[1].option2, 'Milwaukee');
+    assert.equal(events[1].startTime, '32534611200');
+    assert.equal(events[1].result, '0');
+  });
+
+  it('should get event by id', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
+
+    const event1 = await instance.getEvent.call(0);
+    const event2 = await instance.getEvent.call(1);
+
+    assert.equal(event1.option1, 'Charlotte');
+    assert.equal(event1.option2, 'OKC');
+    assert.equal(event1.startTime, '32534524800');
+    assert.equal(event1.result, '0');
+
+    assert.equal(event2.option1, 'Boston');
+    assert.equal(event2.option2, 'Milwaukee');
+    assert.equal(event2.startTime, '32534611200');
+    assert.equal(event2.result, '0');
   });
 
   it('should get eligible betting events', async () => {
-    Sbp.deployed()
-      .then(instance => instance.addEvent.call("Charlotte", "OKC", 1608854400))
-      .then(instance => instance.getEligibleBettingEvents().call())
-      .then((events) =>
-        assert.equal(
-          events.length,
-          1
-        )
-      )
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 666);
+    await instance.addEvent.sendTransaction('Toronto', 'Memphis', 888);
+
+    const events = (await instance.getEligibleBettingEvents.call()).filter(event => event.startTime !== '0');
+
+    assert.equal(events.length, 1);
+    assert.equal(events[0].option1, 'Charlotte');
+    assert.equal(events[0].option2, 'OKC');
+    assert.equal(events[0].startTime, '32534524800');
+    assert.equal(events[0].result, '0');
   });
 
-  it('should place bet', async () => {
-    Sbp.deployed()
-      .then(instance => instance.placeBet.send(0, 1, { amount: 0.01, from: 0x8d6CF62a434CbE0FD985d6fA2Dd22F010490a791 }))
-      .then(instance =>
-        assert.equal(
-          instance.events,
-          {
-            option1: "Charlotte",
-            option2: "OKC",
-            startTime: 1608854400,
-            result: 0
-          }
-        )
-      )
+
+  it('should set event result', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.setEventResult.sendTransaction(0, 1);
+    const event = await instance.getEvent.call(0);
+
+    assert.equal(event.result, 1);
+  });
+
+  it('should place bets', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.placeBet.sendTransaction(0, 1);
+    const bet = await instance.bets.call(0);
+
+    assert.equal(bet.eventId, 0);
+    assert.equal(bet.option, 1);
+  });
+
+  it('should get placed bets', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
+
+    await instance.placeBet.sendTransaction(0, 1);
+    await instance.placeBet.sendTransaction(1, 2);
+
+    const bets = await instance.getPlacedBets.call();
+
+    assert.equal(bets.length, 2);
+
+    assert.equal(bets[0].eventId, 0);
+    assert.equal(bets[0].option, 1);
+
+    assert.equal(bets[1].eventId, 1);
+    assert.equal(bets[1].option, 2);
   });
 });
