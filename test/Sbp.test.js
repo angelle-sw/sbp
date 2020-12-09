@@ -83,7 +83,6 @@ contract('Sbp', accounts => {
     assert.equal(events[0].result, '0');
   });
 
-
   it('should set event result', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
     await instance.setEventResult.sendTransaction(0, 1);
@@ -108,6 +107,54 @@ contract('Sbp', accounts => {
       instance.placeBet.sendTransaction(0, 1)
     );
   });
+
+  it('should get bets', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
+
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 300 });
+    await instance.placeBet.sendTransaction(1, 2, { from: accounts[1], value: 666 });
+
+    const bets = await instance.getBets.call();
+
+    assert.equal(bets.length, 2);
+
+    assert.equal(bets[0].bettor, accounts[1]);
+    assert.equal(bets[0].eventId, 0);
+    assert.equal(bets[0].option, 1);
+    assert.equal(bets[0].amount, 300);
+    assert.deepEqual(bets[0].payoutOdds, ['1', '1']);
+
+    assert.equal(bets[1].bettor, accounts[1]);
+    assert.equal(bets[1].eventId, 1);
+    assert.equal(bets[1].option, 2);
+    assert.equal(bets[1].amount, 666);
+    assert.deepEqual(bets[1].payoutOdds, ['1', '1']);
+  });
+
+  it('should get bet by id', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
+
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 300 });
+    await instance.placeBet.sendTransaction(1, 2, { from: accounts[1], value: 666 });
+
+    const bet1 = await instance.getBet.call(0);
+    const bet2 = await instance.getBet.call(1);
+
+    assert.equal(bet1.bettor, accounts[1]);
+    assert.equal(bet1.eventId, 0);
+    assert.equal(bet1.option, 1);
+    assert.equal(bet1.amount, 300);
+    assert.deepEqual(bet1.payoutOdds, ['1', '1']);
+
+    assert.equal(bet2.bettor, accounts[1]);
+    assert.equal(bet2.eventId, 1);
+    assert.equal(bet2.option, 2);
+    assert.equal(bet2.amount, 666);
+    assert.deepEqual(bet2.payoutOdds, ['1', '1']);
+  });
+
 
   it('should get placed bets', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
