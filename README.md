@@ -68,19 +68,17 @@ The development and launch of the platform will be split into several phases as 
 + Define platform protocol
 
 ### Phase 1
-+ Build scraper to aggregate latest NBA scores
-+ Expose NBA score data via Chainlink oracle
+
 + Build Ethereum smart contract with the following features:
   - Accept tokenized bets from addresses on outcome of games
   - Allow bettors to claim payouts for bets won
   - Payout winning bettors using static 1:1 payout odds
-+ Deploy contract to Ethereum Testnet
 + Build web app front end with the following features:
   - Connect to Metamask wallet
   - Display all scheduled NBA games eligible for betting
   - Accept bets on outcome of games
   - Display current bets for connected wallet addresses
-  - Display historical bet results for connected wallet addresses
++ Deploy contract to Ethereum Testnet
 
 ### Phase 2
 
