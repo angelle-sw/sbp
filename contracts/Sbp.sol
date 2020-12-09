@@ -43,13 +43,18 @@ contract Sbp is Ownable {
     events.push(newEvent);
   }
 
-  function getEligibleBettingEvents() external view returns(Event[] memory) {
-    Event[] memory eligibleBettingEvents = new Event[](1);
-    uint32 index = 0;
+  function getEvent(uint _eventId) public view returns(Event memory) {
+    return events[_eventId];
+  }
+
+  function getEligibleBettingEvents() external view returns(uint[] memory) {
+    uint[] memory eligibleBettingEvents = new uint[](events.length);
+    uint index = 0;
 
     for (uint32 i = 0; i < events.length; i++) {
       if (events[i].startTime > block.timestamp) {
-        eligibleBettingEvents[index] = events[i];
+        eligibleBettingEvents[index] = i;
+        index++;
       }
     }
 
