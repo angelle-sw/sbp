@@ -1,5 +1,6 @@
-const Sbp = artifacts.require('Sbp');
 const truffleAssert = require('truffle-assertions');
+
+const Sbp = artifacts.require('Sbp');
 
 let instance;
 
@@ -183,7 +184,6 @@ contract('Sbp', accounts => {
     await instance.setEventResult.sendTransaction(0, 1);
 
     const bet = await instance.getBet.call(0, { from: accounts[1] });
-
     const betPayout = await instance.calculateBetPayoutAmount.call(bet, { from: accounts[1] });
 
     assert.equal(betPayout, betAmount * 2);
@@ -193,7 +193,6 @@ contract('Sbp', accounts => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
     await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 9999999999999999 });
     await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: 9999999999999999 });
-
     await instance.setEventResult.sendTransaction(0, 1);
 
     const initialBalance = await web3.eth.getBalance(accounts[1]);
@@ -209,7 +208,6 @@ contract('Sbp', accounts => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
     await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 9999999999999999 });
     await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: 9999999999999999 });
-
     await instance.setEventResult.sendTransaction(0, 2);
 
     truffleAssert.fails(
@@ -221,7 +219,6 @@ contract('Sbp', accounts => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
     await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 9999999999999999 });
     await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: 9999999999999999 });
-
     await instance.setEventResult.sendTransaction(0, 1);
 
     truffleAssert.fails(

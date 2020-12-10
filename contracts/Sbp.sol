@@ -19,8 +19,6 @@ contract Sbp is Ownable {
   // payout odd factors when calculating the payout amount
   uint private constant scaleFactor = 1000000;
 
-  uint numberOfEvents = 0;
-
   struct Event {
     string option1;
     string option2;

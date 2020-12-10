@@ -132,3 +132,10 @@ Run tests (implicitly compiles contracts and runs migrations before running):
 ```sh
 $ yarn test
 ```
+
+
+Run tests and report test coverage:
+
+```sh
+$ yarn coverage
+```
