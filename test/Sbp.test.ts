@@ -191,8 +191,10 @@ contract('Sbp', accounts => {
 
   it('should accept bet payout claim', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+
     await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 9999999999999999 });
     await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: 9999999999999999 });
+
     await instance.setEventResult.sendTransaction(0, 1);
 
     const initialBalance = await web3.eth.getBalance(accounts[1]);
@@ -206,8 +208,10 @@ contract('Sbp', accounts => {
 
   it('should reject bet payout claim if bet was lost', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+
     await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 9999999999999999 });
     await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: 9999999999999999 });
+
     await instance.setEventResult.sendTransaction(0, 2);
 
     truffleAssert.fails(
@@ -217,8 +221,10 @@ contract('Sbp', accounts => {
 
   it('should reject bet payout claim if requested by foreign address', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+
     await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 9999999999999999 });
     await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: 9999999999999999 });
+
     await instance.setEventResult.sendTransaction(0, 1);
 
     truffleAssert.fails(
