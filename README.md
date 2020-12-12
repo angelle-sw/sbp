@@ -127,12 +127,11 @@ Run migrations:
 $ yarn migrate
 ```
 
-Run tests (implicitly compiles contracts and runs migrations before running):
+Run tests:
 
 ```sh
 $ yarn test
 ```
-
 
 Run tests and report test coverage:
 
