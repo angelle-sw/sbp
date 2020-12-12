@@ -91,7 +91,7 @@ The development and launch of the platform will be split into several phases as 
 
 + Deploy contract to Ethereum mainnet
 
-### Contributing
+## Contributing
 
 Install and run [Ganache](https://www.trufflesuite.com/ganache).
 
