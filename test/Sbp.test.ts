@@ -221,6 +221,20 @@ contract('Sbp', accounts => {
     );
   });
 
+  it('should reject bet payout claim if payout was already claimed', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: 9999999999999999 });
+    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: 9999999999999999 });
+
+    await instance.setEventResult.sendTransaction(0, 1);
+    await instance.claimBetPayout.sendTransaction(0, { from: accounts[1] })
+
+    truffleAssert.fails(
+      instance.claimBetPayout.sendTransaction(0, { from: accounts[1] })
+    );
+  });
+
   it('should reject bet payout claim if requested by foreign address', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
 
