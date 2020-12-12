@@ -1,4 +1,5 @@
 const truffleAssert = require('truffle-assertions');
+const { isEmptyEvent, isEmptyBet } = require('./helpers');
 
 const Sbp = artifacts.require('Sbp');
 
@@ -75,7 +76,7 @@ contract('Sbp', accounts => {
     await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 666);
     await instance.addEvent.sendTransaction('Toronto', 'Memphis', 888);
 
-    const events = (await instance.getEligibleBettingEvents.call()).filter(event => event.startTime !== '0');
+    const events = (await instance.getEligibleBettingEvents.call()).filter(event => !isEmptyEvent(event));
 
     assert.equal(events.length, 1);
     assert.equal(events[0].option1, 'Charlotte');
@@ -157,22 +158,23 @@ contract('Sbp', accounts => {
   });
 
 
-  it('should get placed bets', async () => {
+  it('should get unclaimed bets', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
     await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
 
-    await instance.placeBet.sendTransaction(0, 1);
-    await instance.placeBet.sendTransaction(1, 2);
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1] });
+    await instance.placeBet.sendTransaction(1, 2, { from: accounts[1] });
+    await instance.placeBet.sendTransaction(1, 1, { from: accounts[2] });
 
-    const bets = await instance.getPlacedBets.call();
+    await instance.setEventResult.sendTransaction(0, 1);
 
-    assert.equal(bets.length, 2);
+    await instance.claimBetPayout.sendTransaction(0, { from: accounts[1] });
 
-    assert.equal(bets[0].eventId, 0);
-    assert.equal(bets[0].option, 1);
+    const bets = (await instance.getUnclaimedBets.call({ from: accounts[1] })).filter(bet => !isEmptyBet(bet));
 
-    assert.equal(bets[1].eventId, 1);
-    assert.equal(bets[1].option, 2);
+    assert.equal(bets.length, 1);
+    assert.equal(bets[0].eventId, 1);
+    assert.equal(bets[0].option, 2);
   });
 
   it('should calculate bet payout amount', async () => {

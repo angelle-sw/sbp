@@ -32,6 +32,7 @@ contract Sbp is Ownable {
     uint option;
     uint8[] payoutOdds;
     uint amount;
+    uint8 claimed;
   }
 
   function balanceOf() external view returns(uint) {
@@ -71,7 +72,7 @@ contract Sbp is Ownable {
   function placeBet(uint _eventId, uint _option) external payable {
     require(events[_eventId].startTime > block.timestamp, "Bets cannot be placed after event has started");
 
-    Bet memory bet = Bet(msg.sender, _eventId, _option, payoutOdds, msg.value);
+    Bet memory bet = Bet(msg.sender, _eventId, _option, payoutOdds, msg.value, 0);
     bets.push(bet);
   }
 
@@ -83,15 +84,14 @@ contract Sbp is Ownable {
     return bets;
   }
 
-  function getPlacedBets() external view returns(Bet[] memory) {
+  function getUnclaimedBets() external view returns(Bet[] memory) {
     Bet[] memory placedBets = new Bet[](bets.length);
     uint index = 0;
 
     for (uint32 i = 0; i < bets.length; i++) {
       Bet memory bet = bets[i];
-      Event memory bettingEvent = events[bet.eventId];
 
-      if (bet.bettor == msg.sender && bettingEvent.result == 0) {
+      if (bet.bettor == msg.sender && bet.claimed == 0) {
         placedBets[index] = bets[i];
         index++;
       }
@@ -108,7 +108,7 @@ contract Sbp is Ownable {
   }
 
   function claimBetPayout(uint _betId) external {
-    Bet memory bet = bets[_betId];
+    Bet storage bet = bets[_betId];
     Event memory betEvent = events[bet.eventId];
 
     require(msg.sender == bet.bettor, "Only original bettor address can claim payout");
@@ -116,6 +116,8 @@ contract Sbp is Ownable {
 
     uint payoutAmount = calculateBetPayoutAmount(bet);
     msg.sender.transfer(payoutAmount);
+
+    bet.claimed = 1;
   }
 }
 
