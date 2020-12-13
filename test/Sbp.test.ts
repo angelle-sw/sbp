@@ -36,6 +36,12 @@ contract('Sbp', accounts => {
     truffleAssert.eventEmitted(event2Receipt, 'NewEvent');
   });
 
+  it('should reject new event request from non-owner address', async () => {
+    truffleAssert.fails(
+      instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800, { from: accounts[1] })
+    );
+  });
+
   it('should get events', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
     await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
@@ -94,6 +100,13 @@ contract('Sbp', accounts => {
 
     assert.equal(event.result, 1);
     truffleAssert.eventEmitted(resultReceipt, 'NewEventResult');
+  });
+
+  it('should reject new event result request from non-owner address', async () => {
+    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    truffleAssert.fails(
+      instance.setEventResult.sendTransaction(0, 1, { from: accounts[1] })
+    );
   });
 
   it('should place bets', async () => {
