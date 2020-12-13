@@ -24,6 +24,9 @@ export const EligibleBet = ({
     await sbp.placeBet(eventId, option, {
       value: utils.parseEther(amount),
     });
+
+    setOption('');
+    setAmount('');
   };
 
   return (
@@ -32,6 +35,7 @@ export const EligibleBet = ({
         <p>
           <input
             type="radio"
+            checked={option === '1'}
             id={`${eventId}-option1`}
             name="options"
             onChange={event => setOption(event.target.value)}
@@ -42,6 +46,7 @@ export const EligibleBet = ({
         <p>
           <input
             type="radio"
+            checked={option === '2'}
             id={`${eventId}-option2`}
             name="options"
             onChange={event => setOption(event.target.value)}

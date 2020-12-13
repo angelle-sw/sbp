@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Web3ReactProvider, useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { InjectedConnector } from '@web3-react/injected-connector';
+import { utils } from 'ethers';
 import sbp from './sbp';
+import web3 from './web3';
 import { Header } from './Header';
 import { Dashboard } from './Dashboard';
 import './App.css';
@@ -19,7 +21,27 @@ export const injectedConnector = new InjectedConnector({
 });
 
 const App = () => {
+  const [bets, setBets] = useState<Bets[]>([]);
   const { account, activate, chainId } = useWeb3React<Web3Provider>();
+
+  useEffect(() => {
+    sbp.on(
+      'NewBet',
+      async (betId, sender, eventId, option, payoutOdds, amount) => {
+        const accounts = await web3.listAccounts();
+
+        if (sender === accounts[0]) {
+          const newBet = {
+            amount: utils.formatEther(amount),
+            eventId: Number(eventId),
+            option: Number(option),
+            payoutOdds,
+          };
+          setBets(prev => [...prev, newBet]);
+        }
+      },
+    );
+  }, []);
 
   useEffect(() => {
     activate(injectedConnector);
@@ -28,7 +50,7 @@ const App = () => {
   return (
     <div className="App">
       <Header />
-      <Dashboard />
+      <Dashboard bets={bets} setBets={setBets} />
       <AddEvent />
     </div>
   );

@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { utils } from 'ethers';
 import sbp from './sbp';
 import web3 from './web3';
 
-export const MyBets = () => {
-  const [bets, setBets] = useState([]);
+type Props = {
+  bets: Bets[];
+  setBets: (bets: Bets[]) => void;
+};
 
+export const MyBets = ({ bets, setBets }: Props) => {
   useEffect(() => {
     (async () => {
       const accounts = await web3.listAccounts();
@@ -24,7 +27,7 @@ export const MyBets = () => {
 
       setBets(bets);
     })();
-  }, []);
+  }, [setBets]);
 
   return (
     <div>

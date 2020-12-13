@@ -3,7 +3,12 @@ import sbp from './sbp';
 import { MyBets } from './MyBets';
 import { EligibleBets } from './EligibleBets';
 
-export const Dashboard = () => {
+type Props = {
+  bets: Bets[];
+  setBets: (bets: Bets[]) => void;
+};
+
+export const Dashboard = ({ bets, setBets }: Props) => {
   const [eligibleBettingEvents, setEligibleBettingEvents] = useState<
     EligibleBettingEvent[]
   >([]);
@@ -17,7 +22,7 @@ export const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <MyBets />
+      <MyBets bets={bets} setBets={setBets} />
       <EligibleBets eligibleBettingEvents={eligibleBettingEvents} />
     </div>
   );
