@@ -29,6 +29,8 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 const { TEST_ENDPOINT, WALLET_INDEX, WALLET_MNEMONIC } = process.env;
 
 module.exports = {
+  contracts_build_directory: './client/src/contract-builds',
+
   /**
    * Networks define how you connect to your ethereum client and let you set the
    * defaults web3 uses to send transactions. If you don't specify one truffle
@@ -49,7 +51,7 @@ module.exports = {
     development: {
       host: '127.0.0.1', // Localhost (default: none)
       port: 7545, // Standard Ethereum port (default: none)
-      network_id: '*', // Any network (default: none)
+      network_id: 5777, // Any network (default: none)
     },
     testnet: {
       provider: function () {
@@ -59,7 +61,7 @@ module.exports = {
           addressIndex: WALLET_INDEX,
         });
       },
-      network_id: '*',
+      network_id: 3,
     },
     // Another network with more advanced options...
     // advanced: {
@@ -101,12 +103,12 @@ module.exports = {
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       optimizer: {
         enabled: true,
-        runs: 200
+        runs: 200,
       },
       // evmVersion: "byzantium"
       // }
     },
   },
 
-  plugins: ['solidity-coverage']
+  plugins: ['solidity-coverage'],
 };

@@ -138,7 +138,7 @@ const PlaceBet = () => {
   );
 };
 
-type PlacedBetsResponse = {
+type UnclaimedBetsResponse = {
   amount: BigNumber;
   bettor: string;
   eventId: BigNumber;
@@ -153,15 +153,17 @@ const MyBets = () => {
     const accounts = await web3.listAccounts();
     const response1 = await sbp;
     console.log(response1);
-    const response = await sbp.getPlacedBets();
+    const response = await sbp.getUnclaimedBets();
     const bets = response
-      .filter(({ bettor }: PlacedBetsResponse) => bettor === accounts[0])
-      .map(({ amount, eventId, option, payoutOdds }: PlacedBetsResponse) => ({
-        amount: utils.formatEther(amount),
-        eventId: Number(eventId),
-        option: Number(option),
-        payoutOdds,
-      }));
+      .filter(({ bettor }: UnclaimedBetsResponse) => bettor === accounts[0])
+      .map(
+        ({ amount, eventId, option, payoutOdds }: UnclaimedBetsResponse) => ({
+          amount: utils.formatEther(amount),
+          eventId: Number(eventId),
+          option: Number(option),
+          payoutOdds,
+        }),
+      );
 
     setBets(bets);
   };
