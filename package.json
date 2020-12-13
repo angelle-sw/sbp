@@ -20,7 +20,7 @@
   "author": "angelle-sw",
   "license": "MIT",
   "dependencies": {
-    "@openzeppelin/contracts": "^3.3.0"
+    "@openzeppelin/contracts": "3.3.0-solc-0.7"
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "^1.2.0",
