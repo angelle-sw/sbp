@@ -35,12 +35,21 @@ contract Sbp is Ownable {
     uint8 claimed;
   }
 
+  event NewEvent(uint id, string option1, string option2, uint64 startTime, uint8 result);
+  event NewBet(uint id, address bettor, uint eventId, uint option, uint8[] payoutOdds, uint amount, uint8 claimed);
+  event NewEventResult(uint id, uint8 result);
+
   function balanceOf() external view returns(uint) {
     return address(this).balance;
   }
 
   function addEvent(string memory _option1, string memory _option2, uint64 _startTime) external onlyOwner {
-    events.push(Event(_option1, _option2, _startTime, 0));
+    uint eventId = events.length;
+
+    Event memory newEvent = Event(_option1, _option2, _startTime, 0);
+    events.push(newEvent);
+
+    emit NewEvent(eventId, _option1, _option2, _startTime, 0);
   }
 
   function getEvent(uint _eventId) public view returns(Event memory) {
@@ -67,13 +76,19 @@ contract Sbp is Ownable {
 
   function setEventResult(uint _eventId, uint8 _result) external onlyOwner {
     events[_eventId].result = _result;
+
+    emit NewEventResult(_eventId, _result);
   }
 
   function placeBet(uint _eventId, uint _option) external payable {
     require(events[_eventId].startTime > block.timestamp, "Bets cannot be placed after event has started");
 
+    uint betId = bets.length;
+
     Bet memory bet = Bet(msg.sender, _eventId, _option, payoutOdds, msg.value, 0);
     bets.push(bet);
+
+    emit NewBet(betId, msg.sender, _eventId, _option, payoutOdds, msg.value, 0);
   }
 
   function getBet(uint _betId) public view returns(Bet memory) {

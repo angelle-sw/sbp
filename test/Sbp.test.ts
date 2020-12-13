@@ -17,8 +17,8 @@ contract('Sbp', accounts => {
   });
 
   it('should add events', async () => {
-    await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
-    await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
+    const event1Receipt = await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
+    const event2Receipt = await instance.addEvent.sendTransaction('Boston', 'Milwaukee', 32534611200);
 
     const event1 = await instance.events.call(0);
     const event2 = await instance.events.call(1);
@@ -27,11 +27,13 @@ contract('Sbp', accounts => {
     assert.equal(event1.option2, 'OKC');
     assert.equal(event1.startTime, '32534524800');
     assert.equal(event1.result, '0');
+    truffleAssert.eventEmitted(event1Receipt, 'NewEvent');
 
     assert.equal(event2.option1, 'Boston');
     assert.equal(event2.option2, 'Milwaukee');
     assert.equal(event2.startTime, '32534611200');
     assert.equal(event2.result, '0');
+    truffleAssert.eventEmitted(event2Receipt, 'NewEvent');
   });
 
   it('should get events', async () => {
@@ -87,19 +89,21 @@ contract('Sbp', accounts => {
 
   it('should set event result', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
-    await instance.setEventResult.sendTransaction(0, 1);
+    const resultReceipt = await instance.setEventResult.sendTransaction(0, 1);
     const event = await instance.getEvent.call(0);
 
     assert.equal(event.result, 1);
+    truffleAssert.eventEmitted(resultReceipt, 'NewEventResult');
   });
 
   it('should place bets', async () => {
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
-    await instance.placeBet.sendTransaction(0, 1);
+    const betReceipt = await instance.placeBet.sendTransaction(0, 1);
     const bet = await instance.bets.call(0);
 
     assert.equal(bet.eventId, 0);
     assert.equal(bet.option, 1);
+    truffleAssert.eventEmitted(betReceipt, 'NewBet');
   });
 
   it('should reject bets placed after event has started', async () => {
