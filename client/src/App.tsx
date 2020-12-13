@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Web3ReactProvider, useWeb3React } from '@web3-react/core';
-import { BigNumber, utils } from 'ethers';
 import { Web3Provider } from '@ethersproject/providers';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import sbp from './sbp';
-import web3 from './web3';
+import { Header } from './Header';
+import { Dashboard } from './Dashboard';
 import './App.css';
 
 export const injectedConnector = new InjectedConnector({
@@ -18,34 +18,26 @@ export const injectedConnector = new InjectedConnector({
   ],
 });
 
-function getLibrary(provider: any): Web3Provider {
-  const library = new Web3Provider(provider);
-  library.pollingInterval = 12000;
-  return library;
-}
-
-function App() {
-  return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <div className="App">
-        <AddEvent />
-        <PlaceBet />
-        <MyBets />
-      </div>
-    </Web3ReactProvider>
-  );
-}
-
-const AddEvent = () => {
-  const [option1, setOption1] = useState('');
-  const [option2, setOption2] = useState('');
-  const [startTime, setStartTime] = useState('');
-
+const App = () => {
   const { account, activate, chainId } = useWeb3React<Web3Provider>();
 
   useEffect(() => {
     activate(injectedConnector);
   }, [account, activate, chainId]);
+
+  return (
+    <div className="App">
+      <Header />
+      <Dashboard />
+      <AddEvent />
+    </div>
+  );
+};
+
+const AddEvent = () => {
+  const [option1, setOption1] = useState('');
+  const [option2, setOption2] = useState('');
+  const [startTime, setStartTime] = useState('');
 
   const addEvent = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -87,102 +79,14 @@ const AddEvent = () => {
   );
 };
 
-const PlaceBet = () => {
-  const [event, setEvent] = useState('');
-  const [option, setOption] = useState('');
-  const [amount, setAmount] = useState('');
-
-  const placeBet = async (formEvent: React.FormEvent) => {
-    formEvent.preventDefault();
-
-    const eventNum = Number(event);
-    const optionNum = Number(option);
-
-    await sbp.placeBet(eventNum, optionNum, {
-      value: utils.parseEther(amount),
-    });
-  };
-
-  return (
-    <div>
-      Place Bet
-      <form onSubmit={placeBet}>
-        <div>
-          <label>Event</label>
-          <input
-            onChange={event => setEvent(event.target.value)}
-            value={event}
-          />
-        </div>
-
-        <div>
-          <label>Option</label>
-          <input
-            onChange={event => setOption(event.target.value)}
-            value={option}
-          />
-        </div>
-
-        <div>
-          <label>Amount</label>
-          <input
-            onChange={event => setAmount(event.target.value)}
-            value={amount}
-          />{' '}
-          Ether
-        </div>
-
-        <button type="submit">Place Bet</button>
-      </form>
-    </div>
-  );
+const getLibrary = (provider: any): Web3Provider => {
+  const library = new Web3Provider(provider);
+  library.pollingInterval = 12000;
+  return library;
 };
 
-type UnclaimedBetsResponse = {
-  amount: BigNumber;
-  bettor: string;
-  eventId: BigNumber;
-  option: BigNumber;
-  payoutOdds: [number, number];
-};
-
-const MyBets = () => {
-  const [bets, setBets] = useState([]);
-
-  const getBets = async () => {
-    const accounts = await web3.listAccounts();
-    const response1 = await sbp;
-    console.log(response1);
-    const response = await sbp.getUnclaimedBets();
-    const bets = response
-      .filter(({ bettor }: UnclaimedBetsResponse) => bettor === accounts[0])
-      .map(
-        ({ amount, eventId, option, payoutOdds }: UnclaimedBetsResponse) => ({
-          amount: utils.formatEther(amount),
-          eventId: Number(eventId),
-          option: Number(option),
-          payoutOdds,
-        }),
-      );
-
-    setBets(bets);
-  };
-
-  return (
-    <div>
-      {bets.map(({ amount, eventId, option, payoutOdds }) => (
-        <div>
-          <p>amount: {amount}</p>
-          <p>eventId: {eventId}</p>
-          <p>option: {option}</p>
-          <p>
-            payout odds: {payoutOdds[0]}:{payoutOdds[1]}
-          </p>
-        </div>
-      ))}
-      <button onClick={() => getBets()}>Get My Bets</button>
-    </div>
-  );
-};
-
-export default App;
+export const Web3ConnectedApp = () => (
+  <Web3ReactProvider getLibrary={getLibrary}>
+    <App />
+  </Web3ReactProvider>
+);

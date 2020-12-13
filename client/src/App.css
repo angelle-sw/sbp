@@ -1,5 +1,10 @@
 .App {
+  height: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  text-align: center;
+  grid-template-rows: 50px 1fr;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
