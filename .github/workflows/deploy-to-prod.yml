@@ -13,7 +13,7 @@ jobs:
       - name: Install Contract Dependencies
         run: yarn
       - name: Test Contract
-        run: yarn test
+        run: yarn test:ci
   deploy-to-production:
     needs: test
     runs-on: ubuntu-latest
