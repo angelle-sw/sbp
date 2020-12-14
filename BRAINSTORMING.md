@@ -5,4 +5,6 @@
  - pari (Russian for 'wager')
  - nex
  - chroma
- - tendril
+ - tendryl
+ - rakkit
+ - trickr
