@@ -2,17 +2,12 @@ const fs = require('fs');
 const path = require('path');
 const Sbp = artifacts.require('../contracts/Sbp.sol');
 
-const updateContractDataLocalData = address => {
-  const contractDataLocalPath = path.join(
-    __dirname,
-    '../client/src/contract-data-local.json',
-  );
-
+const writeContractData = (data, dataPath) => {
   fs.writeFileSync(
-    contractDataLocalPath,
+    dataPath,
     JSON.stringify(
       {
-        address,
+        ...data,
       },
       null,
       2,
@@ -21,22 +16,21 @@ const updateContractDataLocalData = address => {
 };
 
 const updateContractData = ({ abi, networks }) => {
-  fs.writeFileSync(
-    path.join(__dirname, '../client/src/contract-data.json'),
-    JSON.stringify(
-      {
-        abi,
-        address: (networks[3] && networks[3].address) || '',
-      },
-      null,
-      2,
-    ),
-  );
+  // only update if a testnet build exists
+  if (networks[3] && networks[3].address) {
+    const address = networks[3].address;
+    const dataPath = path.join(__dirname, '../client/src/contract-data.json');
+    writeContractData({ abi, address }, dataPath);
+  }
 
-  // only update the env file if a local contract address exist
+  // only update if a development build exists
   if (networks[5777] && networks[5777].address) {
     const address = networks[5777].address;
-    updateContractDataLocalData(address);
+    const dataPath = path.join(
+      __dirname,
+      '../client/src/contract-data-dev.json',
+    );
+    writeContractData({ address }, dataPath);
   }
 };
 

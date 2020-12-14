@@ -10,7 +10,7 @@ const getAddress = async () => {
   }
 
   // @ts-ignore
-  const contract = await import('./contract-data-local.json');
+  const contract = await import('./contract-data-dev.json');
   // @ts-ignore
   return contract.address;
 };
