@@ -22,6 +22,9 @@ export const injectedConnector = new InjectedConnector({
 
 const App = () => {
   const [bets, setBets] = useState<Bets[]>([]);
+  const [eligibleBettingEvents, setEligibleBettingEvents] = useState<
+    EligibleBettingEvent[]
+  >([]);
   const { account, activate, chainId } = useWeb3React<Web3Provider>();
 
   useEffect(() => {
@@ -37,10 +40,24 @@ const App = () => {
             option: Number(option),
             payoutOdds,
           };
+
           setBets(prev => [...prev, newBet]);
         }
       },
     );
+  }, []);
+
+  useEffect(() => {
+    sbp.on('NewEvent', (eventId, option1, option2, startTime, result) => {
+      const newEvent = {
+        option1,
+        option2,
+        result,
+        startTime,
+      };
+
+      setEligibleBettingEvents(prev => [...prev, newEvent]);
+    });
   }, []);
 
   useEffect(() => {
@@ -50,7 +67,12 @@ const App = () => {
   return (
     <div className="App">
       <Header />
-      <Dashboard bets={bets} setBets={setBets} />
+      <Dashboard
+        bets={bets}
+        eligibleBettingEvents={eligibleBettingEvents}
+        setBets={setBets}
+        setEligibleBettingEvents={setEligibleBettingEvents}
+      />
       <AddEvent />
     </div>
   );
