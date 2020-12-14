@@ -8,3 +8,4 @@
  - tendryl
  - rakkit
  - trickr
+ - akuna
