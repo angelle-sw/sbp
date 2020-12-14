@@ -20,12 +20,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Client Directory
-        run: cd client
       - name: Install Client Dependencies
-        run: yarn
+        run: cd client && yarn
       - name: Build
-        run: yarn build
+        run: cd client && yarn build
       - name: Deploy
         uses: nwtgck/actions-netlify@v1.1.11
         with:
