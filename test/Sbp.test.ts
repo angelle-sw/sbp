@@ -1,5 +1,6 @@
 // TODO: Some structs return `string` for `uint` properties but typechain incorrectly
 // generates a `BN` type definition
+// e.g. `event.startTime` property from `getEvents`
 
 const truffleAssert = require('truffle-assertions');
 const { isEmptyEvent, isEmptyBet } = require('./helpers');
