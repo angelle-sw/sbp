@@ -6,7 +6,7 @@ const { isEmptyEvent, isEmptyBet } = require('./helpers');
 
 const Sbp = artifacts.require('Sbp');
 
-const BET_AMOUNT = web3.utils.toWei('0.002');
+const STATIC_BET_AMOUNT = web3.utils.toWei('0.002');
 
 contract('Sbp', accounts => {
   it('should get smart contract balance', async () => {
@@ -127,7 +127,7 @@ contract('Sbp', accounts => {
     const instance = await Sbp.new();
 
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
-    const betReceipt = await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: BET_AMOUNT });
+    const betReceipt = await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: STATIC_BET_AMOUNT });
     const bet = await instance.bets(0);
 
     // TODO: check `payoutOdds`, `amount`, and `claimed` property values
@@ -162,7 +162,6 @@ contract('Sbp', accounts => {
     assert.equal(bets.length, 2);
 
     assert.equal(bets[0].bettor, accounts[1]);
-
     assert.equal(bets[0].eventId.toString(), '0');
     assert.equal(bets[0].option.toString(), '1');
     assert.equal(bets[0].amount.toString(), '300');
@@ -226,14 +225,14 @@ contract('Sbp', accounts => {
     const instance = await Sbp.new();
 
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
-    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: BET_AMOUNT });
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: STATIC_BET_AMOUNT });
 
     await instance.setEventResult.sendTransaction(0, 1);
 
     const bet = await instance.getBet(0, { from: accounts[1] });
     const betPayout = await instance.calculateBetPayoutAmount(bet, { from: accounts[1] });
 
-    assert.equal(betPayout.toString(), (parseInt(BET_AMOUNT, 10) * 2).toString());
+    assert.equal(betPayout.toString(), (parseInt(STATIC_BET_AMOUNT, 10) * 2).toString());
   });
 
   it('should accept bet payout claim', async () => {
@@ -241,8 +240,8 @@ contract('Sbp', accounts => {
 
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
 
-    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: BET_AMOUNT });
-    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: BET_AMOUNT });
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: STATIC_BET_AMOUNT });
+    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: STATIC_BET_AMOUNT });
 
     await instance.setEventResult.sendTransaction(0, 1);
 
@@ -260,8 +259,8 @@ contract('Sbp', accounts => {
 
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
 
-    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: BET_AMOUNT });
-    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: BET_AMOUNT });
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: STATIC_BET_AMOUNT });
+    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: STATIC_BET_AMOUNT });
 
     await instance.setEventResult.sendTransaction(0, 2);
 
@@ -275,8 +274,8 @@ contract('Sbp', accounts => {
 
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
 
-    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: BET_AMOUNT });
-    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: BET_AMOUNT });
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: STATIC_BET_AMOUNT });
+    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: STATIC_BET_AMOUNT });
 
     await instance.setEventResult.sendTransaction(0, 1);
     await instance.claimBetPayout.sendTransaction(0, { from: accounts[1] })
@@ -291,8 +290,8 @@ contract('Sbp', accounts => {
 
     await instance.addEvent.sendTransaction('Charlotte', 'OKC', 32534524800);
 
-    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: BET_AMOUNT });
-    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: BET_AMOUNT });
+    await instance.placeBet.sendTransaction(0, 1, { from: accounts[1], value: STATIC_BET_AMOUNT });
+    await instance.placeBet.sendTransaction(0, 2, { from: accounts[2], value: STATIC_BET_AMOUNT });
 
     await instance.setEventResult.sendTransaction(0, 1);
 

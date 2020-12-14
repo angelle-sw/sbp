@@ -136,4 +136,3 @@ contract Sbp is Ownable {
     bet.claimed = 1;
   }
 }
-
