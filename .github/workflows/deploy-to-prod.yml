@@ -14,8 +14,6 @@ jobs:
         run: yarn
       - name: Test Contract
         run: yarn test
-        with:
-          repo-token: ${{secrets.GITHUB_TOKEN}}
   deploy-to-production:
     needs: test
     runs-on: ubuntu-latest
