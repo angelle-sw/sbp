@@ -138,3 +138,16 @@ Run tests and report test coverage:
 ```sh
 $ yarn coverage
 ```
+
+Generate types for frontend:
+
+```sh
+$ yarn types:ethers
+```
+
+Generate types for tests:
+
+```sh
+$ yarn types:truffle
+```
+

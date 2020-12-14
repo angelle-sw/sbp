@@ -9,7 +9,7 @@
     "migrate-testnet": "truffle migrate --network testnet",
     "types:ethers": "typechain --target=ethers-v5 './client/src/contract-builds/**/*.json'",
     "types:truffle": "typechain --target=truffle-v5 './client/src/contract-builds/**/*.json'",
-    "test": "truffle test",
+    "test": "yarn compile && yarn types:truffle && truffle test",
     "coverage": "truffle run coverage"
   },
   "keywords": [
