@@ -7,7 +7,7 @@
     "compile": "truffle compile",
     "migrate": "truffle migrate",
     "migrate-testnet": "truffle migrate --network testnet",
-    "types:web3": "typechain --target=web3-v1 './client/src/contract-builds/**/*.json'",
+    "types:ethers": "typechain --target=ethers-v5 './client/src/contract-builds/**/*.json'",
     "types:truffle": "typechain --target=truffle-v5 './client/src/contract-builds/**/*.json'",
     "test": "truffle test",
     "coverage": "truffle run coverage"
@@ -26,8 +26,8 @@
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "^1.2.0",
+    "@typechain/ethers-v5": "^5.0.0",
     "@typechain/truffle-v5": "^4.0.0",
-    "@typechain/web3-v1": "^2.0.0",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.13",
