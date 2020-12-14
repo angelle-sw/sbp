@@ -1,0 +1,42 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Contract Dependencies
+        run: yarn
+      - name: Test Contract
+        run: yarn test
+        with:
+          repo-token: ${{secrets.GITHUB_TOKEN}}
+  deploy-to-production:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Client Directory
+        run: cd client
+      - name: Install Client Dependencies
+        run: yarn
+      - name: Build
+        run: yarn build
+      - name: Deploy
+        uses: nwtgck/actions-netlify@v1.1.11
+        with:
+          deploy-message: ${{ github.event.head_commit.message }}
+          enable-commit-comment: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          production-branch: master
+          production-deploy: true
+          publish-dir: 'client/build'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
