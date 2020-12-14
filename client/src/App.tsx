@@ -11,11 +11,9 @@ import './App.css';
 
 export const injectedConnector = new InjectedConnector({
   supportedChainIds: [
-    1, // Mainet
+    1, // Mainnet
     3, // Ropsten
     4, // Rinkeby
-    5, // Goerli
-    42, // Kovan
     1337, // Ganache
   ],
 });
@@ -87,6 +85,9 @@ const AddEvent = () => {
     event.preventDefault();
 
     await sbp.addEvent(option1, option2, 1614643200);
+    setOption1('');
+    setOption2('');
+    setStartTime('');
   };
 
   return (
