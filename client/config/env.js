@@ -4,6 +4,27 @@ const fs = require('fs');
 const path = require('path');
 const paths = require('./paths');
 
+const CONTRACT_DATA_DEV_PATH = '../src/contract-data-dev.json';
+
+const hasContractDataDev = () => {
+  try {
+    require.resolve(CONTRACT_DATA_DEV_PATH);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+const getAppEnvVars = () => {
+  if (process.env.NODE_ENV === 'development' && hasContractDataDev()) {
+    return {
+      'CONTRACT_DATA_DEV': JSON.stringify(require(CONTRACT_DATA_DEV_PATH)),
+    };
+  }
+
+  return {};
+}
+
 // Make sure that including paths.js after env.js will read .env variables.
 delete require.cache[require.resolve('./paths')];
 
@@ -61,8 +82,7 @@ process.env.NODE_PATH = (process.env.NODE_PATH || '')
 const REACT_APP = /^REACT_APP_/i;
 
 function getClientEnvironment(publicUrl) {
-  const raw = Object.keys(process.env)
-    .filter(key => REACT_APP.test(key))
+  const raw = Object.keys(process.env) .filter(key => REACT_APP.test(key))
     .reduce(
       (env, key) => {
         env[key] = process.env[key];
@@ -90,6 +110,8 @@ function getClientEnvironment(publicUrl) {
         // which is why it's disabled by default.
         // It is defined here so it is available in the webpackHotDevClient.
         FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
+
+        ...getAppEnvVars(),
       }
     );
   // Stringify all values so we can feed into webpack DefinePlugin

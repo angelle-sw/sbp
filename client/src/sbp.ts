@@ -4,17 +4,20 @@ import web3 from './web3';
 
 const { NODE_ENV, CONTRACT_DATA_DEV } = process.env;
 
-const getAddress = async () => {
+const getAddress = () => {
   if (NODE_ENV === 'production') {
     return address;
   }
 
-  return CONTRACT_DATA_DEV;
+  if (CONTRACT_DATA_DEV) {
+    return JSON.parse(CONTRACT_DATA_DEV).address;
+  }
+
+  return null;
 };
 
 const contractAddress = getAddress();
 
 const signer = web3.getSigner();
 
-// @ts-expect-error
 export default new Contract(contractAddress, abi, signer);
