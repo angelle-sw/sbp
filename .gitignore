@@ -4,3 +4,4 @@ coverage
 coverage.json
 types
 .env
+contract-data-dev.json

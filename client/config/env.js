@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const paths = require('./paths');
 
-const CONTRACT_DATA_DEV_PATH = '../src/contract-data-dev.json';
+const CONTRACT_DATA_DEV_PATH = '../../contract-data-dev.json';
 
 const hasContractDataDev = () => {
   try {
