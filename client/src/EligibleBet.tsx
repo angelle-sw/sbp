@@ -1,6 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { BigNumber, utils } from 'ethers';
+import fromUnixTime from 'date-fns/fromUnixTime';
+import format from 'date-fns-tz/format';
+
 import sbp from './sbp';
+import './EligibleBet.css';
 
 type Props = {
   eventId: number;
@@ -29,41 +33,65 @@ export const EligibleBet = ({
     setAmount('');
   };
 
+  const formattedDate = useMemo(() => {
+    const result = fromUnixTime(Number(startTime));
+    return format(result, 'MMMM d, Y @ h:mm a zzz');
+  }, [startTime]);
+
   return (
     <div>
       <form onSubmit={placeBet}>
-        <p>
-          <input
-            type="radio"
-            checked={option === '1'}
-            id={`${eventId}-option1`}
-            name="options"
-            onChange={event => setOption(event.target.value)}
-            value={1}
-          />
-          <label htmlFor={`${eventId}-option1`}>{option1}</label>
-        </p>
-        <p>
-          <input
-            type="radio"
-            checked={option === '2'}
-            id={`${eventId}-option2`}
-            name="options"
-            onChange={event => setOption(event.target.value)}
-            value={2}
-          />
-          <label htmlFor={`${eventId}-option2`}>{option2}</label>
-        </p>
-        <p>start time: {Number(startTime)}</p>
-        <div>
-          <label>Amount</label>
-          <input
-            onChange={event => setAmount(event.target.value)}
-            value={amount}
-          />
-          Ether
+        <div className="eligible-bet-card">
+          <span className="eligible-bet-datetime">{formattedDate}</span>
+          <div className="eligible-bet-options">
+            <div
+              className={`eligible-bet-option-radio ${
+                option === '1' ? 'selected' : ''
+              }`}
+            >
+              <label htmlFor={`${eventId}-option1`}>
+                <input
+                  type="radio"
+                  checked={option === '1'}
+                  id={`${eventId}-option1`}
+                  name="options"
+                  onChange={event => setOption(event.target.value)}
+                  value={1}
+                />
+                <div>{option1}</div>
+              </label>
+            </div>
+            <div
+              className={`eligible-bet-option-radio ${
+                option === '2' ? 'selected' : ''
+              }`}
+            >
+              <label htmlFor={`${eventId}-option2`}>
+                <input
+                  type="radio"
+                  checked={option === '2'}
+                  id={`${eventId}-option2`}
+                  name="options"
+                  onChange={event => setOption(event.target.value)}
+                  value={2}
+                />
+                <div>{option2}</div>
+              </label>
+            </div>
+          </div>
+          <div className="eligible-bet-inputs">
+            <div className="eligible-bet-amount">
+              <input
+                onChange={event => setAmount(event.target.value)}
+                value={amount}
+              />
+              <span>ETH</span>
+            </div>
+            <button className="eligible-bet-submit-button" type="submit">
+              Place Bet
+            </button>
+          </div>
         </div>
-        <button type="submit">Place Bet</button>
       </form>
     </div>
   );
