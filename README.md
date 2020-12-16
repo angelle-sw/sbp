@@ -18,7 +18,17 @@ Users will transfer funds and interact with the smart contract by connecting a M
 
 ### Outcome reporting
 
-Outcome reporting data will be sourced from Chainlink oracles.
+#### Options
+
+- Outcome reporting data will be sourced from Chainlink oracles.
+- Apply the proof of stake model to outcome reporting. Automating result reporting is not scalable, brittle, and requires some level of trust. The best way to get dependable results is to marginally incentive someone to answer honestly and massively penalize them for acting in bad faith. It's a self governed system that requires no belabored software automation efforts.
+
+The idea is that when an event ends, someone can report a result via an offchain oracle. When reporting the result, the reporter must stake an amount that is more than the sum of the bets for that event. After a result is reported, the report can be disputed or verified by other staked reporters. Once a predetermined verification threshold is met, the event can be confidently resolved. The reporters get a small reward for reporting honestly. If they answered dishonestly, their stake is forfeited and used to correct payout amounts.
+
+A clear downside to this approach is that an event pool may contain a large sum of money. It would be unreasonable to require a reporter to stake potentially hundreds of ETH just to report an event result. One approach to overcome this is to break the pool into sub pools and have multiple reporters that stake the amount relative to their pool size.
+
+Pros: self-governed, fast event resolutions, trustless, scalable
+Cons: requires motivated users to report/dispute results, requires a user to be flush with liquidity to report results
 
 ### Staking
 
