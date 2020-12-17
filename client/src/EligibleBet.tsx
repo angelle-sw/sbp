@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import { BigNumber, utils } from 'ethers';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns-tz/format';
-
 import sbp from './sbp';
+import { EligibleBetCard } from './EligibleBetCard';
 import './EligibleBet.css';
 
 type Props = {
@@ -58,7 +58,7 @@ export const EligibleBet = ({
                   onChange={event => setOption(event.target.value)}
                   value={1}
                 />
-                <div>{option1}</div>
+                <EligibleBetCard option={option1} selected={option === '1'} />
               </label>
             </div>
             <div
@@ -75,7 +75,7 @@ export const EligibleBet = ({
                   onChange={event => setOption(event.target.value)}
                   value={2}
                 />
-                <div>{option2}</div>
+                <EligibleBetCard option={option2} selected={option === '2'} />
               </label>
             </div>
           </div>
@@ -83,6 +83,7 @@ export const EligibleBet = ({
             <div className="eligible-bet-amount">
               <input
                 onChange={event => setAmount(event.target.value)}
+                placeholder="ex: 1.2"
                 value={amount}
               />
               <span>ETH</span>

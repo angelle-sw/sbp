@@ -22,6 +22,7 @@ export const Dashboard = ({
   useEffect(() => {
     (async () => {
       const response = await sbp.getEligibleBettingEvents();
+      console.log(response);
       setEligibleBettingEvents(response);
     })();
   }, [setEligibleBettingEvents]);

@@ -1,0 +1,5 @@
+.eligible-bets {
+  display: grid;
+  grid-auto-rows: min-content;
+  grid-row-gap: 50px;
+}

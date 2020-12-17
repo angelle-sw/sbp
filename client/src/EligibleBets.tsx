@@ -1,4 +1,5 @@
 import { EligibleBet } from './EligibleBet';
+import './EligibleBets.css';
 
 type Props = {
   eligibleBettingEvents: EligibleBettingEvent[];
@@ -6,8 +7,7 @@ type Props = {
 
 export const EligibleBets = ({ eligibleBettingEvents }: Props) => {
   return (
-    <div>
-      Future Events
+    <div className="eligible-bets">
       {eligibleBettingEvents.map(
         ({ option1, option2, startTime }: EligibleBettingEvent, index) => (
           <EligibleBet

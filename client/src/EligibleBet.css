@@ -1,17 +1,26 @@
 .eligible-bet-card {
-  border: 1px solid black;
+  color: rgb(28, 59, 97);
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  grid-template-columns: min-content min-content min-content;
   border-radius: 4px;
-  width: 430px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  width: 405px;
+  background-color: rgb(245, 247, 250);
 }
 
 .eligible-bet-datetime {
   display: block;
   font-size: 11px;
   margin: 5px 0 0 5px;
+  grid-row: 1/2;
+  grid-column: 1/4;
+  color: rgb(119, 136, 153);
 }
 
 .eligible-bet-options {
-  margin: 10px 0 25px 25px;
+  grid-column: 1/3;
+  margin: 8px 0 25px 25px;
   display: inline-grid;
   grid-template-rows: min-content;
   grid-template-columns: min-content min-content;
@@ -20,18 +29,16 @@
 
 .eligible-bet-option-radio {
   display: inline-block;
+  border: 2px solid white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  background-color: rgb(255, 255, 255);
+  transition: 0.3s;
 }
 
 .selected {
-  background-color: green;
-}
-
-.eligible-bet-option-radio > label > div {
-  border: 1px solid black;
-  border-radius: 4px;
-  height: 100px;
-  width: 100px;
-  font-size: 14px;
+  background-color: rgb(249, 254, 253);
+  border: 2px solid rgb(80, 186, 169);
 }
 
 .eligible-bet-option-radio > label > input {
@@ -41,12 +48,11 @@
 }
 
 .eligible-bet-inputs {
-  margin-left: 20px;
-  height: 100px;
+  margin: 10px 0px 25px 20px;
   display: inline-grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr;
-  grid-row-gap: 20px;
+  grid-template-columns: min-content;
+  grid-template-rows: 50px 50px;
+  align-items: center;
 }
 
 .eligible-bet-amount {
@@ -55,34 +61,93 @@
 }
 
 .eligible-bet-amount > input {
-  width: 90px;
-  height: 20px;
-  border: 1px solid black;
+  width: 60px;
+  height: 24px;
+  border: 1px solid rgb(28, 59, 97);
   border-radius: 2px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  color: rgb(28, 59, 97);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  padding-left: 5px;
+}
+
+.eligible-bet-amount > input::placeholder {
+  color: #bdbdbd;
 }
 
 .eligible-bet-amount > input:focus {
   outline: none;
-  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-  border: 1px solid rgba(81, 203, 238, 1);
+  box-shadow: 0 0 5px rgb(28, 59, 97);
 }
 
 .eligible-bet-amount > span {
-  font-size: 12px;
-  height: 22px;
-  padding: 0 2px;
-  border: 1px solid black;
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
-  line-height: 20px;
-  z-index: 2;
-  background-color: white;
+  font-size: 14px;
+  height: 26px;
+  padding: 0 3px;
+  line-height: 26px;
 }
 
 .eligible-bet-submit-button {
-  align-self: flex-end;
   grid-column: 1/3;
   height: 35px;
+  border-radius: 2px;
+  border: none;
+  color: rgb(255, 255, 255);
+  background-color: rgb(36, 157, 87);
+  transition: 0.3s;
+}
+
+.eligible-bet-submit-button:hover {
+  background-color: rgb(11, 132, 62);
+}
+
+.eligible-bet-submit-button:hover {
+  cursor: pointer;
+}
+
+.eligible-bet-option-card {
+  height: 100px;
+  width: 100px;
+  font-size: 14px;
+}
+
+.eligible-bet-option-card:hover {
+  cursor: pointer;
+}
+
+.eligible-bet-option-card > div {
+  padding: 5px;
+  display: grid;
+  grid-template-columns: 45px 45px;
+  grid-template-rows: 20px 1fr;
+  grid-row-gap: 8px;
+}
+
+.checkmark {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background-color: rgb(180, 231, 220);
+  justify-self: flex-end;
+}
+
+.checkmark > svg {
+  padding: 3px;
+  font-size: 12px;
+  stroke-width: 3;
+}
+
+.logo {
+  padding-left: 7px;
+}
+
+.logo > img {
+  width: 35px;
+}
+
+.odds > span {
+  display: block;
+  text-align: right;
+  padding: 2px 0;
 }
