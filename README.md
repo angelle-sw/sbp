@@ -18,9 +18,8 @@ Users will transfer funds and interact with the smart contract by connecting a M
 
 ### Outcome reporting
 
-#### Options
+#### Consensus Using Proof of Stake
 
-- Outcome reporting data will be sourced from Chainlink oracles.
 - Apply the proof of stake model to outcome reporting. Automating result reporting is not scalable, brittle, and requires some level of trust. The best way to get dependable results is to marginally incentive someone to answer honestly and massively penalize them for acting in bad faith. It's a self governed system that requires no belabored software automation efforts.
 
   The idea is that when an event ends, someone can report a result via an offchain oracle. When reporting the result, the reporter must stake an amount that is more than the sum of the bets for that event. After a result is reported, the report can be disputed or verified by other staked reporters. Once a predetermined verification threshold is met, the event can be confidently resolved. The reporters get a small reward for reporting honestly. If they answered dishonestly, their stake is forfeited and used to correct payout amounts.
@@ -29,6 +28,82 @@ Users will transfer funds and interact with the smart contract by connecting a M
 
   Pros: self-governed, fast event resolutions, trustless, scalable
   Cons: requires motivated users to report/dispute results, requires a user to be flush with liquidity to report results
+  
+##### Consensus Using Commit/Reveal Scheme with Random Node Selection
+
+1) Event ends
+2) Some percentage of nodes on the SBP network are randomly chosen to be event result voters
+3) Each voter calls a smart contract method to request a randomly generated proof-of-work assignment, which is used to force the voter to find some random nonce that they will reveal in a later step for vote verification purposes:
+
+```js
+contract.requestProofOfWorkAssignment(eventId) => proofOfWorkAssignment
+```
+
+4) Voter completes the proof-of-work assignment locally, recording the nonce value discovered to fulfill the assignment (The necessity for this nonce will also be explained in a later step):
+
+```js
+proofOfWorkAssignment(nonce) => proofOfWorkFulfillment
+```
+
+5) Voter executes a local hashing function, passing their vote and the nonce (discovered in step 4) as inputs, and signing the output hashed data using their private key. This signed data acts as a vote verification key, which will be explained in a later step:
+
+```js
+sha256(vote, nonce) => hashedData
+createSignature(privateKey, hashedData) => voteVerificationKey
+```
+
+6) Voter calls a smart contract method to cast their vote, passing the signed vote verification key produced in step 5:
+
+```js
+contract.castVote(voteVerificationKey)
+```
+
+Since this `voteVerificationKey` is a signed hash of the voter's vote and a privately held nonce, it does not reveal anything to public viewers (including other voters) about which way they voted, but it can be used later to ensure that the voter did not change their vote after others revealed their votes.
+
+7) Once a threshold of votes is reached on-chain, voting is closed and the smart contract will reject future votes for the event. This threshold is necessary to incentivize voters to vote quickly -- selected voters who do not vote before the threshold is reached will have their vote rejected and will thus not be able to collect voting rewards.
+8) After voting closes, voters can call a smart contract method to reveal their vote and discovered nonce:
+
+```js
+contract.revealVote(vote, nonce)
+```
+
+9) The smart contract can verify the integrity of each vote (and ensure the voter did not change their vote after others revealed theirs) by checking the proof-of-work nonce and hashing the data (in the same way the voter did in step 5) and passing the output hashed data through a signature verification function:
+
+```js
+proofOfWorkAssignment(nonce) => proofOfWorkFulfillment
+sha256(vote, nonce) => hashedData
+verifySignature(publicKey, hashedData, voteVerificationKey) => boolean
+```
+
+Since the data returned from smart contract calls is publicly viewable, a nonce is necessary to prevent voters from easily brute forcing the hidden votes cast by other voters by just guessing through every possible vote and checking to see if that vote could be verified using their public key.
+
+The nonce requires brute forcers to complete a proof-of-work and arrive at the identical nonce discovered by the voter, before they gain any information about their vote. Gaining access to other votes before casting a vote could cultivate consensus corruption, so it should be infeasible for one node to complete enough proof-of-work assignments assigned to other voters to gain a large amount of information before casting their vote.
+
+
+```js
+// this is too easy
+sha256(vote) => hashedData
+createSignature(publicKey, hashedData) => boolean
+```
+
+```js
+// this requires computational work and luck
+proofOfWorkAssignment(privateKey, nonce) => proofOfWorkFulfillment
+sha256(vote, nonce) => hashedData
+createSignature(publicKey, hashedData, voteVerificationKey) => boolean
+```
+
+A vote guessing attack becomes even less financially feasible due to the voting punctuality incentivization facilitated by the threshold defined in step 7.
+
+10) The smart contract discards any votes that were rejected by the `verifySignature` call in step 9 (i.e. votes that were changed after reveal) and counts the remaining votes to determine the winner.
+
+11) Voters who voted as part of the majority will receive a voting reward. This reward could be in the form of a newly minted governance token, a cut of the winners' pot, or a combination of both.
+
+12) The winning result is stored in the smart contract, unlocking the ability for winning bettors to claim payouts.
+
+#### Consensus Using Chainlink Oracles
+
+(need details here)
 
 ### Staking
 
