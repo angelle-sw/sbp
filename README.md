@@ -29,7 +29,7 @@ Users will transfer funds and interact with the smart contract by connecting a M
   Pros: self-governed, fast event resolutions, trustless, scalable
   Cons: requires motivated users to report/dispute results, requires a user to be flush with liquidity to report results
   
-##### Consensus Using Commit/Reveal Scheme with Random Node Selection
+#### Consensus Using Commit/Reveal Scheme with Random Node Selection
 
 1) Event ends
 2) Some percentage of nodes on the SBP network are randomly chosen to be event result voters
