@@ -31,7 +31,7 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
-const { TEST_ENDPOINT, WALLET_INDEX, WALLET_MNEMONIC } = process.env;
+const { TEST_ENDPOINT, WALLET_INDEX, WALLET_MNEMONIC, ETHEREUM_NETWORK } = process.env;
 
 module.exports = {
   /**
@@ -43,6 +43,8 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+
+  contracts_build_directory: `./build/contracts/${ETHEREUM_NETWORK}`,
 
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default

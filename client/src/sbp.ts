@@ -1,23 +1,21 @@
 import { Contract } from '@ethersproject/contracts';
-import { abi, address } from './contract-data.json';
 import web3 from './web3';
 
-const { NODE_ENV, CONTRACT_DATA_DEV } = process.env;
+const { ETHEREUM_NETWORK } = process.env;
 
-const getAddress = () => {
-  if (NODE_ENV === 'production') {
-    return address;
-  }
+const getContractData = async () => {
+  const contract = await import(`../../build/contracts/${ETHEREUM_NETWORK}/Sbp.json`);
+  const network = Object.keys(contract.networks)[0];
 
-  if (CONTRACT_DATA_DEV) {
-    return JSON.parse(CONTRACT_DATA_DEV).address;
-  }
+  return {
+    address: contract.networks[network].address,
+    abi: contract.abi,
+  };
+}
 
-  return null;
+export default async () => {
+  const contractData = await getContractData();
+  const signer = web3.getSigner();
+
+  return new Contract(contractData.address, contractData.abi, signer);
 };
-
-const contractAddress = getAddress();
-
-const signer = web3.getSigner();
-
-export default new Contract(contractAddress, abi, signer);

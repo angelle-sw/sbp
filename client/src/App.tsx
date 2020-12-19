@@ -3,7 +3,7 @@ import { Web3ReactProvider, useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { utils } from 'ethers';
-import sbp from './sbp';
+import getSbpContract from './sbp';
 import web3 from './web3';
 import { Header } from './Header';
 import { Dashboard } from './Dashboard';
@@ -26,36 +26,44 @@ const App = () => {
   const { account, activate, chainId } = useWeb3React<Web3Provider>();
 
   useEffect(() => {
-    sbp.on(
-      'NewBet',
-      async (betId, sender, eventId, option, payoutOdds, amount) => {
-        const accounts = await web3.listAccounts();
+    (async() => {
+      const sbp = await getSbpContract();
 
-        if (sender === accounts[0]) {
-          const newBet = {
-            amount: utils.formatEther(amount),
-            eventId: Number(eventId),
-            option: Number(option),
-            payoutOdds,
-          };
+      sbp.on(
+        'NewBet',
+        async (betId, sender, eventId, option, payoutOdds, amount) => {
+          const accounts = await web3.listAccounts();
 
-          setBets(prev => [...prev, newBet]);
-        }
-      },
-    );
+          if (sender === accounts[0]) {
+            const newBet = {
+              amount: utils.formatEther(amount),
+              eventId: Number(eventId),
+              option: Number(option),
+              payoutOdds,
+            };
+
+            setBets(prev => [...prev, newBet]);
+          }
+        },
+      );
+    })();
   }, []);
 
   useEffect(() => {
-    sbp.on('NewEvent', (eventId, option1, option2, startTime, result) => {
-      const newEvent = {
-        option1,
-        option2,
-        result,
-        startTime,
-      };
+    (async() => {
+      const sbp = await getSbpContract();
 
-      setEligibleBettingEvents(prev => [...prev, newEvent]);
-    });
+      sbp.on('NewEvent', (eventId, option1, option2, startTime, result) => {
+        const newEvent = {
+          option1,
+          option2,
+          result,
+          startTime,
+        };
+
+        setEligibleBettingEvents(prev => [...prev, newEvent]);
+      });
+    })();
   }, []);
 
   useEffect(() => {
@@ -83,6 +91,8 @@ const AddEvent = () => {
 
   const addEvent = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    const sbp = await getSbpContract();
 
     await sbp.addEvent(option1, option2, 1614643200);
     setOption1('');
@@ -130,8 +140,9 @@ const getLibrary = (provider: any): Web3Provider => {
   return library;
 };
 
-export const Web3ConnectedApp = () => (
+export default () => (
   <Web3ReactProvider getLibrary={getLibrary}>
     <App />
   </Web3ReactProvider>
 );
+

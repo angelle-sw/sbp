@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { BigNumber, utils } from 'ethers';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns-tz/format';
-import sbp from './sbp';
+import getSbpContract from './sbp';
 import { Card, CardHeader, CardBody, CardFooter } from './Card';
 import { EligibleEventOption } from './EligibleEventOption';
 import './EligibleEvent.css';
@@ -25,6 +25,7 @@ export const EligibleEvent = ({
 
   const placeBet = async (event: React.FormEvent) => {
     event.preventDefault();
+    const sbp = await getSbpContract();
 
     await sbp.placeBet(eventId, option, {
       value: utils.parseEther(amount),
