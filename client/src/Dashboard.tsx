@@ -2,13 +2,14 @@ import { useEffect } from 'react';
 import { utils } from 'ethers';
 import sbp from './sbp';
 import web3 from './web3';
-import { MyBets } from './MyBets';
-import { EligibleBets } from './EligibleBets';
+import { Bets } from './Bets';
+import { EligibleEvents } from './EligibleEvents';
+import './Dashboard.css';
 
 type Props = {
-  bets: Bets[];
+  bets: Bet[];
   eligibleBettingEvents: EligibleBettingEvent[];
-  setBets: (bets: Bets[]) => void;
+  setBets: (bets: Bet[]) => void;
   setEligibleBettingEvents: (events: EligibleBettingEvent[]) => void;
 };
 
@@ -22,7 +23,6 @@ export const Dashboard = ({
   useEffect(() => {
     (async () => {
       const response = await sbp.getEligibleBettingEvents();
-      console.log(response);
       setEligibleBettingEvents(response);
     })();
   }, [setEligibleBettingEvents]);
@@ -50,8 +50,8 @@ export const Dashboard = ({
 
   return (
     <div className="dashboard">
-      <MyBets bets={bets} />
-      <EligibleBets eligibleBettingEvents={eligibleBettingEvents} />
+      <Bets bets={bets} />
+      <EligibleEvents eligibleBettingEvents={eligibleBettingEvents} />
     </div>
   );
 };

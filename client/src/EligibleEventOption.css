@@ -1,0 +1,7 @@
+.eligible-event-option {
+  padding: 5px;
+  display: grid;
+  grid-template-columns: 45px 45px;
+  grid-template-rows: 20px 1fr;
+  grid-row-gap: 8px;
+}

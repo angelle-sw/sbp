@@ -1,0 +1,9 @@
+.card-footer {
+  grid-column: 1/3;
+  grid-row: 3/4;
+  margin: 0px 25px 25px 25px;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: min-content;
+  align-items: center;
+}

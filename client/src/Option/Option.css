@@ -1,0 +1,19 @@
+.option {
+  height: 100px;
+  width: 100px;
+  font-size: 14px;
+  border: 2px solid white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  background-color: rgb(255, 255, 255);
+  transition: 0.3s;
+}
+
+.selectable-option:hover {
+  cursor: pointer;
+}
+
+.option-selected {
+  background-color: rgb(249, 254, 253);
+  border: 2px solid rgb(80, 186, 169);
+}

@@ -19,7 +19,7 @@ export const injectedConnector = new InjectedConnector({
 });
 
 const App = () => {
-  const [bets, setBets] = useState<Bets[]>([]);
+  const [bets, setBets] = useState<Bet[]>([]);
   const [eligibleBettingEvents, setEligibleBettingEvents] = useState<
     EligibleBettingEvent[]
   >([]);

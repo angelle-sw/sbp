@@ -1,0 +1,10 @@
+.card {
+  color: rgb(28, 59, 97);
+  display: grid;
+  grid-template-rows: min-content min-content min-content;
+  grid-template-columns: min-content min-content;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  width: min-content;
+  background-color: rgb(245, 247, 250);
+}

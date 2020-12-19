@@ -1,0 +1,12 @@
+.eligible-events > h3 {
+  text-align: center;
+}
+
+.eligible-events > div {
+  justify-content: center;
+  display: grid;
+  grid-auto-rows: min-content;
+  grid-template-columns: min-content min-content;
+  grid-row-gap: 30px;
+  grid-column-gap: 30px;
+}

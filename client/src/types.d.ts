@@ -13,7 +13,7 @@ type UnclaimedBetsResponse = {
   payoutOdds: [number, number];
 };
 
-type Bets = {
+type Bet = {
   amount: string;
   eventId: number;
   option: number;
