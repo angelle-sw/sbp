@@ -3,7 +3,7 @@ import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns-tz/format';
 import { Card, CardHeader, CardBody, CardFooter } from './Card';
 import { BetOption } from './BetOption';
-import sbp from './sbp';
+import getSbpContract from './sbp';
 
 type Props = {
   amount: string;
@@ -17,6 +17,8 @@ export const SingleBet = ({ amount, eventId, option, payoutOdds }: Props) => {
 
   useEffect(() => {
     (async () => {
+      const sbp = await getSbpContract();
+
       const { option1, option2, result, startTime } = await sbp.getEvent(
         eventId,
       );

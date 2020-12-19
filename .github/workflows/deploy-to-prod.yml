@@ -10,9 +10,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install Contract Dependencies
+      - name: Install contract dependencies
         run: yarn
-      - name: Test Contract
+      - name: Test contract
         run: yarn test:ci
   deploy-to-production:
     needs: test
@@ -20,8 +20,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install Client Dependencies
+      - name: Install client dependencies
         run: cd client && yarn
+      - name: Install contract dependencies
+        run: yarn
+      - name: Deploy contract to testnet
+        env:
+          TEST_ENDPOINT: ${{ secrets.TEST_ENDPOINT }}
+          WALLET_MNEMONIC: ${{ secrets.WALLET_MNEMONIC }}
+          WALLET_INDEX: ${{ secrets.WALLET_INDEX }}
+        run: yarn migrate:testnet
       - name: Build
         run: cd client && yarn build
       - name: Deploy

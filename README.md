@@ -178,6 +178,8 @@ The development and launch of the platform will be split into several phases as 
 
 ## Contributing
 
+### Smart Contract Development
+
 Install and run [Ganache](https://www.trufflesuite.com/ganache).
 
 Clone the repository:
@@ -224,15 +226,28 @@ Run tests and report test coverage:
 $ yarn coverage
 ```
 
-Generate types for frontend:
-
-```sh
-$ yarn types:ethers
-```
-
 Generate types for tests:
 
 ```sh
 $ yarn types:truffle
 ```
 
+### Front End Development
+
+Generate types for frontend:
+
+```sh
+$ yarn types:ethers
+```
+
+Start app in development mode:
+
+```sh
+$ yarn start
+```
+
+Build app:
+
+```sh
+$ yarn build
+```

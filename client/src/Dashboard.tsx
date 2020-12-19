@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { utils } from 'ethers';
-import sbp from './sbp';
+import getSbpContract from './sbp';
 import web3 from './web3';
 import { Bets } from './Bets';
 import { EligibleEvents } from './EligibleEvents';
@@ -22,6 +22,7 @@ export const Dashboard = ({
   // get eligible events
   useEffect(() => {
     (async () => {
+      const sbp = await getSbpContract();
       const response = await sbp.getEligibleBettingEvents();
       setEligibleBettingEvents(response);
     })();
@@ -31,6 +32,7 @@ export const Dashboard = ({
   useEffect(() => {
     (async () => {
       const accounts = await web3.listAccounts();
+      const sbp = await getSbpContract();
       const response = await sbp.getUnclaimedBets();
 
       const bets = response
