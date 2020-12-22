@@ -28,7 +28,7 @@ Users will transfer funds and interact with the smart contract by connecting a M
 
   Pros: self-governed, fast event resolutions, trustless, scalable
   Cons: requires motivated users to report/dispute results, requires a user to be flush with liquidity to report results
-  
+
 #### Consensus Using Commit/Reveal Scheme with Random Node Selection
 
 1) Event ends
@@ -144,43 +144,9 @@ Holders of a platform-minted ERC20 governance token may cast votes to adopt and 
 
 The governance token could be distributed as a reward to odds makers for maintaining platform events, proportional to the number of events they maintain relative to the total number of events on the platform.
 
-## Plan
-
-The development and launch of the platform will be split into several phases as detailed below:
-
-### Phase 0
-
-+ Define platform protocol
-
-### Phase 1
-
-+ Build Ethereum smart contract with the following features:
-  - Accept tokenized bets from addresses on outcome of games
-  - Allow bettors to claim payouts for bets won
-  - Payout winning bettors using static 1:1 payout odds
-+ Build web app front end with the following features:
-  - Connect to Metamask wallet
-  - Display all scheduled NBA games eligible for betting
-  - Accept bets on outcome of games
-  - Display current bets for connected wallet addresses
-+ Deploy contract to Ethereum Testnet
-
-### Phase 2
-
-+ Implement automated market making
-+ Use third-party Chainlink oracles to source score data
-+ Add automated testing to validate smart contract edge scenarios
-+ Solidify fees and business model
-
-### Phase 3
-
-+ Deploy contract to Ethereum mainnet
-
 ## Contributing
 
 ### Smart Contract Development
-
-Install and run [Ganache](https://www.trufflesuite.com/ganache).
 
 Clone the repository:
 
@@ -188,7 +154,7 @@ Clone the repository:
 $ git clone https://github.com/angelle-sw/sbp
 ```
 
-Create a `.env` file in the root of your repository:
+Create a `.env` file in the root of your repository (You can use [Infura](https://infura.io) to spin up a test endpoint):
 
 ```sh
 TEST_ENDPOINT=<endpoint>
@@ -208,10 +174,22 @@ Compile contracts:
 $ yarn compile
 ```
 
-Run migrations:
+Boot up local Ganache network:
+
+```sh
+$ yarn blockchain:local
+```
+
+Deploy contract to local Ganache network:
 
 ```sh
 $ yarn migrate
+```
+
+Deploy contract to Ropsten testnet:
+
+```sh
+$ yarn migrate:testnet
 ```
 
 Run tests:
@@ -238,6 +216,12 @@ Generate types for frontend:
 
 ```sh
 $ yarn types:ethers
+```
+
+Change into client directory:
+
+```sh
+$ cd client
 ```
 
 Start app in development mode:
