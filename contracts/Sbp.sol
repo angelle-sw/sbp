@@ -15,10 +15,6 @@ contract Sbp is Ownable {
   // Hardcode 1:1 static payout odds for now
   uint8[] public payoutOdds = [1, 1];
 
-  // Since Solidity does not support fixed point numbers, a scale factor is used to scale up the
-  // payout odd factors when calculating the payout amount
-  uint private constant scaleFactor = 1000000;
-
   struct Event {
     string option1;
     string option2;
@@ -116,6 +112,10 @@ contract Sbp is Ownable {
   }
 
   function calculateBetPayoutAmount(Bet memory _bet) pure public returns(uint) {
+    // Since Solidity does not support fixed point numbers, a scale factor is used to scale up the
+    // payout odd factors when calculating the payout amount
+    uint scaleFactor = 1000000;
+
     uint payoutMultiplier = SafeMath.div((_bet.payoutOdds[0] * scaleFactor), _bet.payoutOdds[1]);
     uint betProfit = uint(_bet.amount.mul(payoutMultiplier) / scaleFactor);
 
