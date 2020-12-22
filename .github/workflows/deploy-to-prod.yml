@@ -14,6 +14,12 @@ jobs:
         run: yarn
       - name: Test contract
         run: yarn test:ci
+      - name: Install client dependencies
+        run: cd client && yarn
+      - name: Lint web app
+        run: cd client && yarn lint
+      - name: Test web app
+        run: cd client && yarn test
   deploy-to-production:
     needs: test
     runs-on: ubuntu-latest
