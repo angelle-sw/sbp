@@ -7,6 +7,7 @@ import getSbpContract from './sbp';
 import web3 from './web3';
 import { Header } from './Header';
 import { Dashboard } from './Dashboard';
+import { DebugInfo } from './DebugInfo';
 import './App.css';
 
 export const injectedConnector = new InjectedConnector({
@@ -116,6 +117,7 @@ const AddEvent = () => {
 
         <button type="submit">Add Event</button>
       </form>
+      <DebugInfo />
     </div>
   );
 };
