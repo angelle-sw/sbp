@@ -20,37 +20,32 @@ export const injectedConnector = new InjectedConnector({
 
 const App = () => {
   const [bets, setBets] = useState<Bet[]>([]);
-  const [eligibleBettingEvents, setEligibleBettingEvents] = useState<
-    EligibleBettingEvent[]
-  >([]);
+  const [eligibleBettingEvents, setEligibleBettingEvents] = useState<EligibleBettingEvent[]>([]);
   const { account, activate, chainId } = useWeb3React<Web3Provider>();
 
   useEffect(() => {
-    (async() => {
+    (async () => {
       const sbp = await getSbpContract();
 
-      sbp.on(
-        'NewBet',
-        async (betId, sender, eventId, option, payoutOdds, amount) => {
-          const accounts = await web3.listAccounts();
+      sbp.on('NewBet', async (betId, sender, eventId, option, payoutOdds, amount) => {
+        const accounts = await web3.listAccounts();
 
-          if (sender === accounts[0]) {
-            const newBet = {
-              amount: utils.formatEther(amount),
-              eventId: Number(eventId),
-              option: Number(option),
-              payoutOdds,
-            };
+        if (sender === accounts[0]) {
+          const newBet = {
+            amount: utils.formatEther(amount),
+            eventId: Number(eventId),
+            option: Number(option),
+            payoutOdds,
+          };
 
-            setBets(prev => [...prev, newBet]);
-          }
-        },
-      );
+          setBets(prev => [...prev, newBet]);
+        }
+      });
     })();
   }, []);
 
   useEffect(() => {
-    (async() => {
+    (async () => {
       const sbp = await getSbpContract();
 
       sbp.on('NewEvent', (eventId, option1, option2, startTime, result) => {
@@ -106,26 +101,17 @@ const AddEvent = () => {
       <form onSubmit={addEvent}>
         <div>
           <label>Option 1</label>
-          <input
-            onChange={event => setOption1(event.target.value)}
-            value={option1}
-          />
+          <input onChange={event => setOption1(event.target.value)} value={option1} />
         </div>
 
         <div>
           <label>Option 2</label>
-          <input
-            onChange={event => setOption2(event.target.value)}
-            value={option2}
-          />
+          <input onChange={event => setOption2(event.target.value)} value={option2} />
         </div>
 
         <div>
           <label>Start Time</label>
-          <input
-            onChange={event => setStartTime(event.target.value)}
-            value={startTime}
-          />
+          <input onChange={event => setStartTime(event.target.value)} value={startTime} />
         </div>
 
         <button type="submit">Add Event</button>
@@ -145,4 +131,3 @@ export default () => (
     <App />
   </Web3ReactProvider>
 );
-

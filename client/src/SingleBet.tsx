@@ -19,9 +19,7 @@ export const SingleBet = ({ amount, eventId, option, payoutOdds }: Props) => {
     (async () => {
       const sbp = await getSbpContract();
 
-      const { option1, option2, result, startTime } = await sbp.getEvent(
-        eventId,
-      );
+      const { option1, option2, result, startTime } = await sbp.getEvent(eventId);
       setEvent({ option1, option2, result, startTime: Number(startTime) });
     })();
   }, [eventId]);
@@ -38,16 +36,8 @@ export const SingleBet = ({ amount, eventId, option, payoutOdds }: Props) => {
       <Card>
         <CardHeader>{formattedDate}</CardHeader>
         <CardBody>
-          <BetOption
-            option={event.option1}
-            payoutOdds={payoutOdds}
-            selected={option === 1}
-          />
-          <BetOption
-            option={event.option2}
-            payoutOdds={payoutOdds}
-            selected={option === 2}
-          />
+          <BetOption option={event.option1} payoutOdds={payoutOdds} selected={option === 1} />
+          <BetOption option={event.option2} payoutOdds={payoutOdds} selected={option === 2} />
         </CardBody>
         <CardFooter>
           <span>amount: {amount}</span>

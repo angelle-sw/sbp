@@ -11,7 +11,7 @@ const getContractData = async () => {
     address: contract.networks[network].address,
     abi: contract.abi,
   };
-}
+};
 
 export default async () => {
   const contractData = await getContractData();

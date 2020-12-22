@@ -18,7 +18,7 @@ export const EligibleEvents = ({ eligibleBettingEvents }: Props) => {
               option2={option2}
               startTime={startTime}
             />
-          ),
+          )
         )}
       </div>
     </div>

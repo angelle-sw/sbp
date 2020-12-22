@@ -37,14 +37,12 @@ export const Dashboard = ({
 
       const bets = response
         .filter(({ bettor }: UnclaimedBetsResponse) => bettor === accounts[0])
-        .map(
-          ({ amount, eventId, option, payoutOdds }: UnclaimedBetsResponse) => ({
-            amount: utils.formatEther(amount),
-            eventId: Number(eventId),
-            option: Number(option),
-            payoutOdds,
-          }),
-        );
+        .map(({ amount, eventId, option, payoutOdds }: UnclaimedBetsResponse) => ({
+          amount: utils.formatEther(amount),
+          eventId: Number(eventId),
+          option: Number(option),
+          payoutOdds,
+        }));
 
       setBets(bets);
     })();

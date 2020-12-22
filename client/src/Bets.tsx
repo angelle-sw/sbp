@@ -10,12 +10,7 @@ export const Bets = ({ bets }: Props) => (
     <h3>My Bets</h3>
     <div>
       {bets.map(({ amount, eventId, option, payoutOdds }) => (
-        <SingleBet
-          amount={amount}
-          eventId={eventId}
-          option={option}
-          payoutOdds={payoutOdds}
-        />
+        <SingleBet amount={amount} eventId={eventId} option={option} payoutOdds={payoutOdds} />
       ))}
     </div>
   </div>

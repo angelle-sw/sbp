@@ -7,7 +7,5 @@ type Props = {
 };
 
 export const Option = ({ children, className, selected }: Props) => (
-  <div className={`option ${className} ${selected && 'option-selected'}`}>
-    {children}
-  </div>
+  <div className={`option ${className} ${selected && 'option-selected'}`}>{children}</div>
 );

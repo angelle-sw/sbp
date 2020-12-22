@@ -14,12 +14,7 @@ type Props = {
   startTime: BigNumber;
 };
 
-export const EligibleEvent = ({
-  eventId,
-  option1,
-  option2,
-  startTime,
-}: Props) => {
+export const EligibleEvent = ({ eventId, option1, option2, startTime }: Props) => {
   const [option, setOption] = useState('');
   const [amount, setAmount] = useState('');
 
