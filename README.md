@@ -235,3 +235,15 @@ Build app:
 ```sh
 $ yarn build
 ```
+
+Lint app:
+
+```sh
+$ yarn lint
+```
+
+Run tests:
+
+```sh
+$ yarn test
+```
