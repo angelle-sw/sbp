@@ -16,7 +16,9 @@ module.exports = {
   },
   devServer: {
     publicPath: '/',
-    headers: {'Access-Control-Allow-Origin': '*'},
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    },
     historyApiFallback: true,
     hot: true,
     overlay: false,

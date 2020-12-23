@@ -2,7 +2,7 @@
   "name": "sbp",
   "version": "1.0.0",
   "description": "Decentralized sports & event betting platform powered by Ethereum smart contracts and automated market making.",
-  "main": "index.js",
+  "main": "contracts/Sbp.sol",
   "scripts": {
     "compile": "cross-env ETHEREUM_NETWORK=local truffle compile",
     "migrate": "cross-env ETHEREUM_NETWORK=local truffle migrate",

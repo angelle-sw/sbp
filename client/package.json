@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "sbp-interface",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
