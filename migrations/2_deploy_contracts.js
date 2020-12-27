@@ -1,3 +1,3 @@
-const Sbp = artifacts.require('../contracts/Sbp.sol');
+const Sbp = artifacts.require('Sbp');
 
 module.exports = deployer => deployer.deploy(Sbp);
