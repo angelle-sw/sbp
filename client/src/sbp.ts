@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts';
-import web3 from './web3';
+import createWeb3Provider from './web3';
 
 const { ETHEREUM_NETWORK } = process.env;
 
@@ -14,6 +14,8 @@ const getContractData = async () => {
 };
 
 export default async () => {
+  const web3 = createWeb3Provider();
+
   const contractData = await getContractData();
   const signer = web3.getSigner();
 

@@ -6,8 +6,6 @@ declare global {
   }
 }
 
-window.web3 = window.web3 || {};
-
-const web3 = new Web3Provider(window.web3.currentProvider);
-
-export default web3;
+export default function createWeb3Provider() {
+  return new Web3Provider(window.web3.currentProvider);
+}

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { utils } from 'ethers';
 import getSbpContract from './sbp';
-import web3 from './web3';
+import createWeb3Provider from './web3';
 import { Bets } from './Bets';
 import { EligibleEvents } from './EligibleEvents';
 import './Dashboard.css';
@@ -19,6 +19,8 @@ export const Dashboard = ({
   setBets,
   setEligibleBettingEvents,
 }: Props) => {
+  const web3 = createWeb3Provider();
+
   // get eligible events
   useEffect(() => {
     (async () => {

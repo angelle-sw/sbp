@@ -4,7 +4,6 @@ import { Web3Provider } from '@ethersproject/providers';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { utils } from 'ethers';
 import getSbpContract from './sbp';
-import web3 from './web3';
 import { Header } from './Header';
 import { Dashboard } from './Dashboard';
 import { DebugInfo } from './DebugInfo';
@@ -15,35 +14,35 @@ export const injectedConnector = new InjectedConnector({
     1, // Mainnet
     3, // Ropsten
     4, // Rinkeby
-    1337, // Ganache
+    5777, // Ganache
   ],
 });
 
-const App = () => {
+const ConnectedApp = () => {
   const [bets, setBets] = useState<Bet[]>([]);
   const [eligibleBettingEvents, setEligibleBettingEvents] = useState<EligibleBettingEvent[]>([]);
-  const { account, activate, chainId } = useWeb3React<Web3Provider>();
+  const { account } = useWeb3React<Web3Provider>();
 
   useEffect(() => {
-    (async () => {
-      const sbp = await getSbpContract();
+    if (account) {
+      (async () => {
+        const sbp = await getSbpContract();
 
-      sbp.on('NewBet', async (betId, sender, eventId, option, payoutOdds, amount) => {
-        const accounts = await web3.listAccounts();
+        sbp.on('NewBet', async (betId, sender, eventId, option, payoutOdds, amount) => {
+          if (sender === account) {
+            const newBet = {
+              amount: utils.formatEther(amount),
+              eventId: Number(eventId),
+              option: Number(option),
+              payoutOdds,
+            };
 
-        if (sender === accounts[0]) {
-          const newBet = {
-            amount: utils.formatEther(amount),
-            eventId: Number(eventId),
-            option: Number(option),
-            payoutOdds,
-          };
-
-          setBets(prev => [...prev, newBet]);
-        }
-      });
-    })();
-  }, []);
+            setBets(prev => [...prev, newBet]);
+          }
+        });
+      })();
+    }
+  }, [account]);
 
   useEffect(() => {
     (async () => {
@@ -61,10 +60,6 @@ const App = () => {
       });
     })();
   }, []);
-
-  useEffect(() => {
-    activate(injectedConnector);
-  }, [account, activate, chainId]);
 
   return (
     <div className="App">
@@ -122,14 +117,85 @@ const AddEvent = () => {
   );
 };
 
+const App = () => {
+  const { account, activate, active, chainId, error } = useWeb3React<Web3Provider>();
+  const [loading, setLoading] = useState(true);
+  const [connectError, setConnectError] = useState('');
+
+  useEffect(() => {
+    activate(injectedConnector);
+  }, [account, activate, chainId]);
+
+  useEffect(() => {
+    if (active) {
+      setLoading(true);
+      setConnectError('');
+
+      const { ETHEREUM_NETWORK } = process.env;
+      if (ETHEREUM_NETWORK === 'local' && chainId !== 5777) {
+        setConnectError('Unsupported Chain ID. Set your wallet network to your local network.');
+      }
+
+      if (ETHEREUM_NETWORK === 'testnet' && chainId !== 3) {
+        setConnectError('Unsupported Chain ID. Set your wallet network to the Ropsten network.');
+      }
+
+      setLoading(false);
+    }
+
+    if (error) {
+      setLoading(true);
+      setConnectError('');
+
+      const { ETHEREUM_NETWORK } = process.env;
+      if (ETHEREUM_NETWORK === 'local' && chainId !== 5777) {
+        setConnectError('Unsupported Chain ID. Set your wallet network to your local network.');
+      }
+
+      if (ETHEREUM_NETWORK === 'testnet' && chainId !== 3) {
+        setConnectError('Unsupported Chain ID. Set your wallet network to the Ropsten network.');
+      }
+
+      setLoading(false);
+    }
+  }, [active, chainId, error?.message]);
+
+  if (loading) {
+    return <>Loading...</>;
+  }
+
+  if (connectError) {
+    return <>Error {connectError}</>;
+  }
+
+  if (active) {
+    return <ConnectedApp />;
+  }
+
+  return null;
+};
+
 const getLibrary = (provider: any): Web3Provider => {
   const library = new Web3Provider(provider);
   library.pollingInterval = 12000;
   return library;
 };
 
-export default () => (
-  <Web3ReactProvider getLibrary={getLibrary}>
-    <App />
-  </Web3ReactProvider>
-);
+export default () => {
+  if (window.web3) {
+    return (
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <App />
+      </Web3ReactProvider>
+    );
+  }
+
+  return (
+    <div>
+      Download a Web3 Wallet like{' '}
+      <a href="https://metamask.io" target="_blank">
+        MetaMask
+      </a>
+    </div>
+  );
+};

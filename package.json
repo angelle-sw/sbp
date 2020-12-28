@@ -7,7 +7,7 @@
     "compile": "cross-env ETHEREUM_NETWORK=local truffle compile",
     "migrate": "cross-env ETHEREUM_NETWORK=local truffle migrate",
     "migrate:testnet": "cross-env ETHEREUM_NETWORK=testnet truffle migrate --network testnet",
-    "blockchain:local": "kill-port --port 7545 && ganache-cli --port=7545 --networkId=5777 --seed=sbp-project --db=db",
+    "blockchain:local": "kill-port --port 7545 && ganache-cli --port=7545 --networkId=5777 --chainId=5777 --seed=sbp-project --db=db",
     "types:ethers": "typechain --target=ethers-v5 './build/contracts/**/*.json'",
     "types:truffle": "typechain --target=truffle-v5 './build/contracts/**/*.json'",
     "test": "yarn compile && yarn types:truffle && truffle test",
