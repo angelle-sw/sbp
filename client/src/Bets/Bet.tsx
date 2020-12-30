@@ -13,7 +13,7 @@ type Props = {
 };
 
 export const Bet = ({ amount, eventId, option, payoutOdds }: Props) => {
-  const [event, setEvent] = useState<EligibleBettingEvent>();
+  const [event, setEvent] = useState<EligibleEvent>();
 
   useEffect(() => {
     (async () => {

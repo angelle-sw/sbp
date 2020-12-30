@@ -1,4 +1,4 @@
-type EligibleBettingEventResponse = {
+type EligibleEventResponse = {
   option1: string;
   option2: string;
   result: number;
@@ -13,7 +13,7 @@ type UnclaimedBetsResponse = {
   payoutOdds: [number, number];
 };
 
-type EligibleBettingEvent = {
+type EligibleEvent = {
   eventId: number;
   option1: string;
   option2: string;
@@ -29,6 +29,14 @@ type Bet = {
 };
 
 type ReduxState = {
-  bets: UnclaimedBetsResponse[];
-  eligibleEvents: EligibleBettingEventResponse[];
+  bets: {
+    data: UnclaimedBetsResponse[];
+    error: Error;
+    loading: boolean;
+  };
+  eligibleEvents: {
+    data: EligibleEventResponse[];
+    error: Error;
+    loading: boolean;
+  };
 };

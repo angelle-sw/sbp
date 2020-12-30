@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { utils } from 'ethers';
 
-const getBets = (state: ReduxState) => state.bets;
+const getBets = (state: ReduxState) => state.bets.data;
 
 export const transformBets = createSelector([getBets], bets => {
   return bets

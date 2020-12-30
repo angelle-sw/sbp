@@ -23,7 +23,7 @@ const injectedConnector = new InjectedConnector({
 
 type Props = {
   bets: Bet[];
-  eligibleEvents: EligibleBettingEvent[];
+  eligibleEvents: EligibleEvent[];
   getBets: () => void;
   getEligibleEvents: () => void;
 };
@@ -95,7 +95,7 @@ const Dapp = ({ bets, eligibleEvents, getBets, getEligibleEvents }: Props) => {
   return (
     <div className="App">
       <Header account={account} owner={owner} />
-      <Dashboard bets={bets} eligibleBettingEvents={eligibleEvents} />
+      <Dashboard bets={bets} eligibleEvents={eligibleEvents} />
     </div>
   );
 };
