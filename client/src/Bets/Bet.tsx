@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns-tz/format';
-import { Card, CardHeader, CardBody, CardFooter } from './Card';
+import { Card, CardHeader, CardBody, CardFooter } from '../Card';
 import { BetOption } from './BetOption';
-import getSbpContract from './sbp';
+import getSbpContract from '../sbp';
 
 type Props = {
   amount: string;
@@ -12,7 +12,7 @@ type Props = {
   payoutOdds: [number, number];
 };
 
-export const SingleBet = ({ amount, eventId, option, payoutOdds }: Props) => {
+export const Bet = ({ amount, eventId, option, payoutOdds }: Props) => {
   const [event, setEvent] = useState<EligibleBettingEvent>();
 
   useEffect(() => {

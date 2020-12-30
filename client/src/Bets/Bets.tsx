@@ -1,4 +1,4 @@
-import { SingleBet } from './SingleBet';
+import { Bet } from './Bet';
 import './Bets.css';
 
 type Props = {
@@ -10,7 +10,13 @@ export const Bets = ({ bets }: Props) => (
     <h3>My Bets</h3>
     <div>
       {bets.map(({ amount, eventId, option, payoutOdds }) => (
-        <SingleBet amount={amount} eventId={eventId} option={option} payoutOdds={payoutOdds} />
+        <Bet
+          amount={amount}
+          eventId={eventId}
+          key={eventId}
+          option={option}
+          payoutOdds={payoutOdds}
+        />
       ))}
     </div>
   </div>

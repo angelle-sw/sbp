@@ -14,6 +14,7 @@ export const EligibleEvents = ({ eligibleBettingEvents }: Props) => {
           ({ option1, option2, startTime }: EligibleBettingEvent, index) => (
             <EligibleEvent
               eventId={index}
+              key={index}
               option1={option1}
               option2={option2}
               startTime={startTime}

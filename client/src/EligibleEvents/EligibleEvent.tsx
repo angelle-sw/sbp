@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import { BigNumber, utils } from 'ethers';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns-tz/format';
-import getSbpContract from './sbp';
-import { Card, CardHeader, CardBody, CardFooter } from './Card';
+import getSbpContract from '../sbp';
+import { Card, CardHeader, CardBody, CardFooter } from '../Card';
 import { EligibleEventOption } from './EligibleEventOption';
 import './EligibleEvent.css';
 

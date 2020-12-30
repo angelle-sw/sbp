@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { utils } from 'ethers';
 import getSbpContract from './sbp';
 import createWeb3Provider from './web3';
-import { Bets } from './Bets';
-import { EligibleEvents } from './EligibleEvents';
+import { Bets } from './Bets/Bets';
+import { EligibleEvents } from './EligibleEvents/EligibleEvents';
 import './Dashboard.css';
 
 type Props = {
