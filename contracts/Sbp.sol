@@ -13,12 +13,13 @@ contract Sbp is Ownable {
   Bet[] public bets;
 
   // Hardcode 1:1 static payout odds for now
-  uint8[] public payoutOdds = [1, 1];
+  uint8[] public staticPayoutOdds = [1, 1];
 
   struct Event {
     string option1;
     string option2;
     uint64 startTime;
+    uint8[] payoutOdds;
     uint8 result;
   }
 
@@ -31,7 +32,7 @@ contract Sbp is Ownable {
     uint8 claimed;
   }
 
-  event NewEvent(uint id, string option1, string option2, uint64 startTime, uint8 result);
+  event NewEvent(uint id, string option1, string option2, uint64 startTime, uint8[] payoutOdds, uint8 result);
   event NewBet(uint id, address bettor, uint eventId, uint option, uint8[] payoutOdds, uint amount, uint8 claimed);
   event NewEventResult(uint id, uint8 result);
 
@@ -42,10 +43,10 @@ contract Sbp is Ownable {
   function addEvent(string memory _option1, string memory _option2, uint64 _startTime) external onlyOwner {
     uint eventId = events.length;
 
-    Event memory newEvent = Event(_option1, _option2, _startTime, 0);
+    Event memory newEvent = Event(_option1, _option2, _startTime, staticPayoutOdds, 0);
     events.push(newEvent);
 
-    emit NewEvent(eventId, _option1, _option2, _startTime, 0);
+    emit NewEvent(eventId, _option1, _option2, _startTime, staticPayoutOdds, 0);
   }
 
   function getEvent(uint _eventId) public view returns(Event memory) {
@@ -79,12 +80,13 @@ contract Sbp is Ownable {
   function placeBet(uint _eventId, uint _option) external payable {
     require(events[_eventId].startTime > block.timestamp, "Bets cannot be placed after event has started");
 
+    Event memory betEvent = events[_eventId];
     uint betId = bets.length;
 
-    Bet memory bet = Bet(msg.sender, _eventId, _option, payoutOdds, msg.value, 0);
+    Bet memory bet = Bet(msg.sender, _eventId, _option, betEvent.payoutOdds, msg.value, 0);
     bets.push(bet);
 
-    emit NewBet(betId, msg.sender, _eventId, _option, payoutOdds, msg.value, 0);
+    emit NewBet(betId, msg.sender, _eventId, _option, betEvent.payoutOdds, msg.value, 0);
   }
 
   function getBet(uint _betId) public view returns(Bet memory) {
