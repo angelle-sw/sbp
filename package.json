@@ -23,6 +23,11 @@
   ],
   "author": "angelle-sw",
   "license": "MIT",
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
   "dependencies": {
     "@openzeppelin/contracts": "3.3.0-solc-0.7"
   },
@@ -38,6 +43,8 @@
     "dotenv": "^8.2.0",
     "ganache-cli": "^6.12.1",
     "kill-port": "^1.6.1",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
     "solidity-coverage": "^0.7.13",
     "truffle": "^5.1.56",
     "truffle-assertions": "^0.9.2",
