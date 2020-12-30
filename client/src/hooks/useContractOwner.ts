@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import getSbpContract from './sbp';
+import getSbpContract from '../sbp';
 
 export const useContractOwner = () => {
   const [owner, setOwner] = useState('');

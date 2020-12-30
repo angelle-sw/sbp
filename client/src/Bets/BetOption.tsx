@@ -1,5 +1,5 @@
 import { FiCheck } from 'react-icons/fi';
-import { Option } from '../Option/Option';
+import { Option } from '../Option';
 import NFLLogo from '../nfl-logo.png';
 import './BetOption.css';
 
