@@ -20,7 +20,7 @@ export const Bet = ({ amount, eventId, option, payoutOdds }: Props) => {
       const sbp = await getSbpContract();
 
       const { option1, option2, result, startTime } = await sbp.getEvent(eventId);
-      setEvent({ option1, option2, result, startTime: Number(startTime) });
+      setEvent({ eventId: 100, option1, option2, result, startTime: Number(startTime) });
     })();
   }, [eventId]);
 

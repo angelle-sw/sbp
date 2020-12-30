@@ -1,7 +1,7 @@
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Dapp } from './Dapp';
+import Dapp from './Dapp';
 import { AddEvent } from './AddEvent';
 import { NoWallet } from './NoWallet';
 
