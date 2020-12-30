@@ -8,8 +8,6 @@ type Props = {
 export const Header = ({ account, owner }: Props) => {
   const navigate = useNavigate();
 
-  console.log(account, owner);
-
   return (
     <div>
       Header
