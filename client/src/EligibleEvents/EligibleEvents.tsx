@@ -3,7 +3,7 @@ import './EligibleEvents.css';
 
 type Props = {
   addBet: AddBet;
-  eligibleEvents: EligibleEvent[];
+  eligibleEvents: EligibleEvents;
 };
 
 export const EligibleEvents = ({ addBet, eligibleEvents }: Props) => {
@@ -11,7 +11,6 @@ export const EligibleEvents = ({ addBet, eligibleEvents }: Props) => {
     <div className="eligible-events">
       <h3>Future Events</h3>
       <div>
-        {console.log(eligibleEvents)}
         {eligibleEvents.map(
           ({ eventId, option1, option2, payoutOdds, startTime }: EligibleEvent) => (
             <EligibleEvent

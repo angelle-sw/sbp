@@ -4,7 +4,7 @@ export const getEligibleEvents = () => ({
   type: GET_ELIGIBLE_EVENTS_REQUEST,
 });
 
-export const getEligibleEventsSuccess = (eligibleEvents: EligibleEvent[]) => ({
+export const getEligibleEventsSuccess = (eligibleEvents: EligibleEvents) => ({
   payload: eligibleEvents,
   type: GET_ELIGIBLE_EVENTS_SUCCESS,
 });

@@ -13,17 +13,27 @@ type Props = {
   verified?: boolean;
 };
 
+type Event = {
+  eventId: number;
+  option1: string;
+  option2: string;
+  startTime: number;
+};
+
 export const Bet = ({ amount, eventId, option, payoutOdds, verified }: Props) => {
-  const [event, setEvent] = useState<EligibleEvent>();
+  const [event, setEvent] = useState<Event>();
 
   useEffect(() => {
     (async () => {
       const sbp = await getSbpContract();
 
-      const { option1, option2, result, startTime } = await sbp.getEvent(eventId);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      setEvent({ eventId: 100, option1, option2, result, startTime: Number(startTime) });
+      const { option1, option2, startTime } = await sbp.getEvent(eventId);
+      setEvent({
+        eventId,
+        option1,
+        option2,
+        startTime: Number(startTime),
+      });
     })();
   }, [eventId]);
 

@@ -7,10 +7,10 @@ type EligibleEventResponse = {
 };
 
 type UnclaimedBetsResponse = {
-  amount: string;
+  amount: BigNumber;
   bettor: string;
-  eventId: number;
-  option: number;
+  eventId: BigNumber;
+  option: BigNumber;
   payoutOdds: [number, number];
 };
 
@@ -23,6 +23,8 @@ type EligibleEvent = {
   startTime: BigNumber;
 };
 
+type EligibleEvents = EligibleEvent[];
+
 type Bet = {
   amount: string;
   eventId: number;
@@ -32,42 +34,18 @@ type Bet = {
   verified?: boolean;
 };
 
-type NewBet = {
-  amount: string;
-  eventId: number;
-  option: number;
-};
+type Bets = Bet[];
 
-type AddBet = (
-  eventId: number,
-  option: string,
-  amount: BigNumber,
-  payoutOdds: [number, number]
-) => void;
-
-type AddVerifiedBet = (
-  amount: BigNumber,
-  bettor: string,
-  eventId: BigNumber,
-  option: BigNumber,
-  payoutOdds: [number, number]
-) => void;
-
-type PendingBet = {
-  amount: BigNumber;
-  eventId: number;
-  option: number;
-  payoutOdds: [number, number];
-};
+type AddBet = typeof addBet;
 
 type ReduxState = {
   bets: {
-    data: Bet[];
+    data: Bets;
     error: Error;
     loading: boolean;
   };
   eligibleEvents: {
-    data: EligibleEvent[];
+    data: EligibleEvents;
     error: Error;
     loading: boolean;
   };

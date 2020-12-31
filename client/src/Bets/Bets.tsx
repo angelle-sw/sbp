@@ -2,7 +2,7 @@ import { Bet } from './Bet';
 import './Bets.css';
 
 type Props = {
-  bets: Bet[];
+  bets: Bets;
 };
 
 export const Bets = ({ bets }: Props) => (

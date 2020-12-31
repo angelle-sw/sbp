@@ -7,11 +7,9 @@ import { processBets } from './helpers';
 
 export function* getBets() {
   const sbpContract = yield call(getSbpContract);
-  const unclaimedBets = yield call(sbpContract.getUnclaimedBets);
+  const bets = yield call(sbpContract.getUnclaimedBets);
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  yield put(getBetsSuccess(processBets(unclaimedBets)));
+  yield put(getBetsSuccess(processBets(bets)));
 }
 
 export function* addBet(action: AnyAction) {

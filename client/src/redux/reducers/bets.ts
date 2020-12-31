@@ -9,7 +9,7 @@ import {
 type State = {
   error?: Error;
   loading: boolean;
-  data: Bet[];
+  data: Bets;
 };
 
 const initialState: State = {

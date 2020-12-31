@@ -1,7 +1,6 @@
 import { BigNumber } from 'ethers';
 import {
   ADD_BET_REQUEST,
-  ADD_BET_SUCCESS,
   ADD_PENDING_BET_REQUEST,
   GET_BETS_REQUEST,
   GET_BETS_SUCCESS,
@@ -12,8 +11,8 @@ export const getBets = () => ({
   type: GET_BETS_REQUEST,
 });
 
-export const getBetsSuccess = (unclaimedBets: UnclaimedBetsResponse[]) => ({
-  payload: unclaimedBets,
+export const getBetsSuccess = (bets: Bets) => ({
+  payload: bets,
   type: GET_BETS_SUCCESS,
 });
 
@@ -48,11 +47,6 @@ export const addPendingBet = (
     hash,
   },
   type: ADD_PENDING_BET_REQUEST,
-});
-
-export const addBetSuccess = (unclaimedBets: UnclaimedBetsResponse) => ({
-  payload: unclaimedBets,
-  type: ADD_BET_SUCCESS,
 });
 
 export const verifyBet = (hash: string) => ({

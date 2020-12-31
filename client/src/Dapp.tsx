@@ -20,12 +20,12 @@ const injectedConnector = new InjectedConnector({
 });
 
 type Props = {
-  addBet: AddBet;
-  bets: Bet[];
-  eligibleEvents: EligibleEvent[];
-  getBets: () => void;
-  getEligibleEvents: () => void;
-  verifyBet: (hash: string) => void;
+  addBet: typeof addBet;
+  bets: Bets;
+  eligibleEvents: EligibleEvents;
+  getBets: typeof getBets;
+  getEligibleEvents: typeof getEligibleEvents;
+  verifyBet: typeof verifyBet;
 };
 
 const Dapp = ({ addBet, bets, eligibleEvents, getBets, getEligibleEvents, verifyBet }: Props) => {
@@ -106,6 +106,4 @@ export default connect(mapStateToProps, {
   getBets,
   getEligibleEvents,
   verifyBet,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
 })(Dapp);

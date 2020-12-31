@@ -4,8 +4,8 @@ import './Dashboard.css';
 
 type Props = {
   addBet: AddBet;
-  bets: Bet[];
-  eligibleEvents: EligibleEvent[];
+  bets: Bets;
+  eligibleEvents: EligibleEvents;
 };
 
 export const Dashboard = ({ addBet, bets, eligibleEvents }: Props) => (

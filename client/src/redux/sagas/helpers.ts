@@ -1,18 +1,17 @@
 import { utils } from 'ethers';
 
-export const processBets = (unclaimedBets: UnclaimedBetsResponse[]) => {
-  return unclaimedBets
-    .filter(({ bettor }: UnclaimedBetsResponse) => bettor)
+export const processBets = (bets: UnclaimedBetsResponse[]) =>
+  bets
+    .filter(({ bettor }: { bettor?: string }) => bettor)
     .map(({ amount, eventId, option, payoutOdds }: UnclaimedBetsResponse) => ({
       amount: utils.formatEther(amount),
       eventId: Number(eventId),
       option: Number(option),
       payoutOdds,
     }));
-};
 
-export const processEvents = (eligibleEvents: EligibleEvent[]) => {
-  return eligibleEvents.map(
+export const processEvents = (eligibleEvents: EligibleEvents) =>
+  eligibleEvents.map(
     (
       { option1, option2, payoutOdds, result, startTime }: EligibleEventResponse,
       index: number
@@ -25,4 +24,3 @@ export const processEvents = (eligibleEvents: EligibleEvent[]) => {
       startTime: Number(startTime),
     })
   );
-};
