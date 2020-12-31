@@ -1,6 +1,7 @@
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { BrowserRouter } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Dapp from './Dapp';
 import { NoWallet } from './NoWallet';
 
@@ -16,6 +17,7 @@ export default () => {
       <Web3ReactProvider getLibrary={getLibrary}>
         <BrowserRouter>
           <Dapp />
+          <Toaster />
         </BrowserRouter>
       </Web3ReactProvider>
     );

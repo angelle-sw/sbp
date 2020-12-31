@@ -85,7 +85,7 @@
   cursor: pointer;
 }
 
-.checkmark {
+.event-checkmark {
   height: 18px;
   width: 18px;
   border-radius: 50%;
@@ -93,7 +93,7 @@
   justify-self: flex-end;
 }
 
-.checkmark > svg {
+.event-checkmark > svg {
   padding: 3px;
   font-size: 12px;
   stroke-width: 3;

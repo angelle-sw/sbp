@@ -17,7 +17,7 @@ export const EligibleEventOption = ({ option, selected }: Props) => {
       <div className="eligible-event-option">
         <div>{option}</div>
         {selected ? (
-          <div className="checkmark">
+          <div className="event-checkmark">
             <FiCheck />
           </div>
         ) : (

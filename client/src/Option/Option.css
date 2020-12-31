@@ -17,3 +17,8 @@
   background-color: rgb(249, 254, 253);
   border: 2px solid rgb(80, 186, 169);
 }
+
+.option-selected-pending {
+  background-color: rgb(249, 254, 253);
+  border: 2px solid rgb(252, 191, 73);
+}

@@ -11,3 +11,25 @@
   filter: none;
   filter: grayscale(50%);
 }
+
+.bet-checkmark {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  justify-self: flex-end;
+}
+
+.bet-checkmark-pending {
+  color: rgb(104, 104, 104);
+  background-color: rgb(252, 191, 73);
+}
+
+.bet-checkmark-verified {
+  background-color: rgb(180, 231, 220);
+}
+
+.bet-checkmark > svg {
+  padding: 3px;
+  font-size: 12px;
+  stroke-width: 3;
+}

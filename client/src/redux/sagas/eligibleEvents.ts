@@ -1,5 +1,6 @@
 import { AnyAction } from 'redux';
 import { call, put } from 'redux-saga/effects';
+import toast from 'react-hot-toast';
 import getSbpContract from '../../sbp';
 import { addPendingEvent, getEligibleEventsSuccess } from '../actions';
 import { processEvents } from './helpers';
@@ -20,4 +21,6 @@ export function* addEvent(action: AnyAction) {
   yield put(
     addPendingEvent(eventId, option1, option2, result, payoutOdds, startTime, response.hash)
   );
+
+  toast.loading('Adding your event', { duration: 2000 });
 }

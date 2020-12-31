@@ -4,18 +4,23 @@ import NFLLogo from '../nfl-logo.png';
 import './BetOption.css';
 
 type Props = {
-  option: string;
+  option?: string;
   payoutOdds: [number, number];
   selected: boolean;
+  verified?: boolean;
 };
 
-export const BetOption = ({ option, payoutOdds, selected }: Props) => {
+export const BetOption = ({ option, payoutOdds, selected, verified }: Props) => {
   return (
-    <Option selected={selected}>
+    <Option selected={selected} verified={verified}>
       <div className={`bet-option ${selected ? '' : 'shadowed'}`}>
         <div>{option}</div>
         {selected ? (
-          <div className="checkmark">
+          <div
+            className={`bet-checkmark ${
+              verified === false ? 'bet-checkmark-pending' : 'bet-checkmark-verified'
+            }`}
+          >
             <FiCheck />
           </div>
         ) : (

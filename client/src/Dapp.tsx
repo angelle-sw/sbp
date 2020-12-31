@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Contract } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
+import toast from 'react-hot-toast';
 import getSbpContract from './sbp';
 import {
   addBet,
@@ -18,6 +20,7 @@ import { Header } from './Header';
 import { Dashboard } from './Dashboard';
 import { AddEvent } from './AddEvent';
 import './Dapp.css';
+import sbp from './sbp';
 
 const injectedConnector = new InjectedConnector({
   supportedChainIds: [
@@ -70,26 +73,42 @@ const Dapp = ({
 
   useEffect(() => {
     if (account) {
+      let sbp: Contract | undefined;
       (async () => {
-        const sbp = await getSbpContract();
+        sbp = await getSbpContract();
 
         sbp.on('NewBet', (betId, sender, eventId, option, payoutOdds, amount, result, event) => {
           if (sender === account) {
             verifyBet(event.transactionHash);
           }
+          toast.success('Bet added!');
         });
       })();
+
+      return () => {
+        if (sbp) {
+          sbp.removeAllListeners('NewBet');
+        }
+      };
     }
   }, [account]);
 
   useEffect(() => {
+    let sbp: Contract | undefined;
     (async () => {
-      const sbp = await getSbpContract();
+      sbp = await getSbpContract();
 
       sbp.on('NewEvent', (eventId, option1, option2, startTime, payoutOdds, result, event) => {
         verifyEvent(event.transactionHash);
+        toast.success('Event added!');
       });
     })();
+
+    return () => {
+      if (sbp) {
+        sbp.removeAllListeners('NewEvent');
+      }
+    };
   }, []);
 
   if (loading) {

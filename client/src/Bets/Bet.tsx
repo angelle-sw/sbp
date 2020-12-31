@@ -22,9 +22,11 @@ type Event = {
 
 export const Bet = ({ amount, eventId, option, payoutOdds, verified }: Props) => {
   const [event, setEvent] = useState<Event>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const sbp = await getSbpContract();
 
       const { option1, option2, startTime } = await sbp.getEvent(eventId);
@@ -35,6 +37,7 @@ export const Bet = ({ amount, eventId, option, payoutOdds, verified }: Props) =>
         startTime: Number(startTime),
       });
     })();
+    setLoading(false);
   }, [eventId]);
 
   const formattedDate = useMemo(() => {
@@ -44,21 +47,30 @@ export const Bet = ({ amount, eventId, option, payoutOdds, verified }: Props) =>
     }
   }, [event]);
 
-  if (event) {
-    return (
-      <Card>
-        {verified === false && 'Pending!'}
-        <CardHeader>{formattedDate}</CardHeader>
-        <CardBody>
-          <BetOption option={event.option1} payoutOdds={payoutOdds} selected={option === 1} />
-          <BetOption option={event.option2} payoutOdds={payoutOdds} selected={option === 2} />
-        </CardBody>
-        <CardFooter>
-          <span>amount: {amount}</span>
-        </CardFooter>
-      </Card>
-    );
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  return null;
+  return (
+    <Card>
+      <CardHeader>{formattedDate}</CardHeader>
+      <CardBody>
+        <BetOption
+          option={event?.option1}
+          payoutOdds={payoutOdds}
+          selected={option === 1}
+          verified={verified}
+        />
+        <BetOption
+          option={event?.option2}
+          payoutOdds={payoutOdds}
+          selected={option === 2}
+          verified={verified}
+        />
+      </CardBody>
+      <CardFooter>
+        <span>amount: {amount}</span>
+      </CardFooter>
+    </Card>
+  );
 };

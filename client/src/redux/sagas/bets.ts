@@ -1,6 +1,7 @@
 import { AnyAction } from 'redux';
 import { call, put } from 'redux-saga/effects';
 import { utils } from 'ethers';
+import toast from 'react-hot-toast';
 import getSbpContract from '../../sbp';
 import { addPendingBet, getBetsSuccess } from '../actions';
 import { processBets } from './helpers';
@@ -21,4 +22,6 @@ export function* addBet(action: AnyAction) {
   yield put(
     addPendingBet(eventId, Number(option), utils.formatEther(amount), payoutOdds, response.hash)
   );
+
+  toast.loading('Adding your bet', { duration: 2000 });
 }
