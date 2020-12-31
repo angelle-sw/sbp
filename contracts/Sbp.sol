@@ -12,14 +12,20 @@ contract Sbp is Ownable {
   Event[] public events;
   Bet[] public bets;
 
-  // Hardcode 1:1 static payout odds for now
-  uint8[] public staticPayoutOdds = [1, 1];
+  // Hardcode 1:1 initial payout odds for now
+  uint public initialPayoutOdds = 10000;
+
+  // Since Solidity does not support fixed point numbers, a scale factor is used to scale up the
+  // payout odd factors when calculating the payout amount
+  uint scaleFactor = 1000000;
 
   struct Event {
-    string option1;
-    string option2;
+    string eventType;
+    string option1Name;
+    uint option1PayoutOdds;
+    string option2Name;
+    uint option2PayoutOdds;
     uint64 startTime;
-    uint8[] payoutOdds;
     uint8 result;
   }
 
@@ -27,26 +33,26 @@ contract Sbp is Ownable {
     address payable bettor;
     uint eventId;
     uint option;
-    uint8[] payoutOdds;
+    uint payoutOdds;
     uint amount;
     uint8 claimed;
   }
 
-  event NewEvent(uint id, string option1, string option2, uint64 startTime, uint8[] payoutOdds, uint8 result);
-  event NewBet(uint id, address bettor, uint eventId, uint option, uint8[] payoutOdds, uint amount, uint8 claimed);
+  event NewEvent(uint id, string eventType, string option1Name, uint option1PayoutOdds, string option2Name, uint option2PayoutOdds, uint64 startTime, uint8 result);
+  event NewBet(uint id, address bettor, uint eventId, uint option, uint payoutOdds, uint amount, uint8 claimed);
   event NewEventResult(uint id, uint8 result);
 
   function balanceOf() external view returns(uint) {
     return address(this).balance;
   }
 
-  function addEvent(string memory _option1, string memory _option2, uint64 _startTime) external onlyOwner {
+  function addEvent(string memory _eventType, string memory _option1Name, string memory _option2Name, uint64 _startTime) external onlyOwner {
     uint eventId = events.length;
 
-    Event memory newEvent = Event(_option1, _option2, _startTime, staticPayoutOdds, 0);
+    Event memory newEvent = Event(_eventType, _option1Name, initialPayoutOdds, _option2Name, initialPayoutOdds, _startTime, 0);
     events.push(newEvent);
 
-    emit NewEvent(eventId, _option1, _option2, _startTime, staticPayoutOdds, 0);
+    emit NewEvent(eventId, _eventType, _option1Name, initialPayoutOdds, _option2Name, initialPayoutOdds, _startTime, 0);
   }
 
   function getEvent(uint _eventId) public view returns(Event memory) {
@@ -77,16 +83,64 @@ contract Sbp is Ownable {
     emit NewEventResult(_eventId, _result);
   }
 
+  function ceil(uint a, uint m) pure internal returns (uint) {
+    return SafeMath.mul(SafeMath.div(SafeMath.sub(SafeMath.add(a, m), 1), m), m);
+  }
+
+  function adjustEventPayoutOdds(uint _eventId) internal {
+    Event storage bettingEvent = events[_eventId];
+
+    uint32 option1NumberOfBets = 0;
+    uint option1TotalPayoutAmount = 0;
+    uint32 option2NumberOfBets = 0;
+    uint option2TotalPayoutAmount = 0;
+
+    for (uint32 i = 0; i < bets.length; i++) {
+      Bet memory bet = bets[i];
+
+      if (bet.eventId == _eventId) {
+        if (bet.option == 1) {
+          option1TotalPayoutAmount += calculateBetPayoutAmount(bet);
+          option1NumberOfBets++;
+        }
+        else if (bet.option == 2) {
+          option2TotalPayoutAmount += calculateBetPayoutAmount(bet);
+          option2NumberOfBets++;
+        }
+      }
+    }
+
+    uint option1PayoutOddsAdjustment = SafeMath.add(
+      SafeMath.div(
+        SafeMath.add(option1TotalPayoutAmount, option2TotalPayoutAmount),
+        SafeMath.add(option1TotalPayoutAmount, 1)
+      ),
+    1);
+
+    uint option2PayoutOddsAdjustment = SafeMath.add(
+      SafeMath.div(
+        SafeMath.add(option1TotalPayoutAmount, option2TotalPayoutAmount),
+        SafeMath.add(option2TotalPayoutAmount, 1)
+      ),
+    1);
+
+    bettingEvent.option1PayoutOdds += option1PayoutOddsAdjustment;
+    bettingEvent.option2PayoutOdds += option2PayoutOddsAdjustment;
+  }
+
   function placeBet(uint _eventId, uint _option) external payable {
     require(events[_eventId].startTime > block.timestamp, "Bets cannot be placed after event has started");
 
-    Event memory betEvent = events[_eventId];
+    Event memory bettingEvent = events[_eventId];
     uint betId = bets.length;
+    uint payoutOdds = _option == 1 ? bettingEvent.option1PayoutOdds : bettingEvent.option2PayoutOdds;
 
-    Bet memory bet = Bet(msg.sender, _eventId, _option, betEvent.payoutOdds, msg.value, 0);
+    Bet memory bet = Bet(msg.sender, _eventId, _option, payoutOdds, msg.value, 0);
     bets.push(bet);
 
-    emit NewBet(betId, msg.sender, _eventId, _option, betEvent.payoutOdds, msg.value, 0);
+    adjustEventPayoutOdds(_eventId);
+
+    emit NewBet(betId, msg.sender, _eventId, _option, payoutOdds, msg.value, 0);
   }
 
   function getBet(uint _betId) public view returns(Bet memory) {
@@ -113,12 +167,8 @@ contract Sbp is Ownable {
     return placedBets;
   }
 
-  function calculateBetPayoutAmount(Bet memory _bet) pure public returns(uint) {
-    // Since Solidity does not support fixed point numbers, a scale factor is used to scale up the
-    // payout odd factors when calculating the payout amount
-    uint scaleFactor = 1000000;
-
-    uint payoutMultiplier = SafeMath.div((_bet.payoutOdds[0] * scaleFactor), _bet.payoutOdds[1]);
+  function calculateBetPayoutAmount(Bet memory _bet) view public returns(uint) {
+    uint payoutMultiplier = SafeMath.div((_bet.payoutOdds * scaleFactor), 10000);
     uint betProfit = uint(_bet.amount.mul(payoutMultiplier) / scaleFactor);
 
     return _bet.amount.add(betProfit);
@@ -126,10 +176,10 @@ contract Sbp is Ownable {
 
   function claimBetPayout(uint _betId) external {
     Bet storage bet = bets[_betId];
-    Event memory betEvent = events[bet.eventId];
+    Event memory bettingEvent = events[bet.eventId];
 
     require(msg.sender == bet.bettor, "Only original bettor address can claim payout");
-    require(betEvent.result == bet.option, "Only winning bets can claim payout");
+    require(bettingEvent.result == bet.option, "Only winning bets can claim payout");
     require(bet.claimed == 0, "Bet payout was already claimed");
 
     uint payoutAmount = calculateBetPayoutAmount(bet);
