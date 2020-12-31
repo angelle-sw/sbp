@@ -83,16 +83,12 @@ contract Sbp is Ownable {
     emit NewEventResult(_eventId, _result);
   }
 
-  function ceil(uint a, uint m) pure internal returns (uint) {
-    return SafeMath.mul(SafeMath.div(SafeMath.sub(SafeMath.add(a, m), 1), m), m);
-  }
-
   function adjustEventPayoutOdds(uint _eventId) internal {
     Event storage bettingEvent = events[_eventId];
 
-    uint32 option1NumberOfBets = 0;
+    uint option1TotalAmountWagered = 0;
     uint option1TotalPayoutAmount = 0;
-    uint32 option2NumberOfBets = 0;
+    uint option2TotalAmountWagered = 0;
     uint option2TotalPayoutAmount = 0;
 
     for (uint32 i = 0; i < bets.length; i++) {
@@ -101,31 +97,72 @@ contract Sbp is Ownable {
       if (bet.eventId == _eventId) {
         if (bet.option == 1) {
           option1TotalPayoutAmount += calculateBetPayoutAmount(bet);
-          option1NumberOfBets++;
+          option1TotalAmountWagered = bet.amount;
         }
         else if (bet.option == 2) {
           option2TotalPayoutAmount += calculateBetPayoutAmount(bet);
-          option2NumberOfBets++;
+          option2TotalAmountWagered = bet.amount;
         }
       }
     }
 
-    uint option1PayoutOddsAdjustment = SafeMath.add(
-      SafeMath.div(
-        SafeMath.add(option1TotalPayoutAmount, option2TotalPayoutAmount),
-        SafeMath.add(option1TotalPayoutAmount, 1)
-      ),
-    1);
+    uint oneEther = 1000000000000000000;
+    uint totalPayoutAmount = SafeMath.add(option1TotalPayoutAmount, option2TotalPayoutAmount);
+    uint option1PayoutWeight = 0;
+    uint option2PayoutWeight = 0;
+    uint payoutOddsAdjustmentCeiling = 1;
 
-    uint option2PayoutOddsAdjustment = SafeMath.add(
-      SafeMath.div(
-        SafeMath.add(option1TotalPayoutAmount, option2TotalPayoutAmount),
-        SafeMath.add(option2TotalPayoutAmount, 1)
-      ),
-    1);
+    if (totalPayoutAmount > SafeMath.mul(oneEther, 10000)) {
+      payoutOddsAdjustmentCeiling = 100000000;
+    }
+    if (totalPayoutAmount > SafeMath.mul(oneEther, 1000)) {
+      payoutOddsAdjustmentCeiling = 10000000;
+    }
+    else if (totalPayoutAmount > SafeMath.mul(oneEther, 100)) {
+      payoutOddsAdjustmentCeiling = 1000000;
+    }
+    else if (totalPayoutAmount > SafeMath.mul(oneEther, 10)) {
+      payoutOddsAdjustmentCeiling = 100000;
+    }
+    else if (totalPayoutAmount > oneEther) {
+      payoutOddsAdjustmentCeiling = 10000;
+    }
+    else if (totalPayoutAmount > SafeMath.div(oneEther, 10)) {
+      payoutOddsAdjustmentCeiling = 1000;
+    }
 
-    bettingEvent.option1PayoutOdds += option1PayoutOddsAdjustment;
-    bettingEvent.option2PayoutOdds += option2PayoutOddsAdjustment;
+    if (option1TotalAmountWagered >= option2TotalAmountWagered) {
+      option1PayoutWeight = SafeMath.div(option1TotalAmountWagered, SafeMath.add(option2TotalAmountWagered, 1));
+      option2PayoutWeight = SafeMath.mul(option1TotalAmountWagered, option2TotalAmountWagered);
+    }
+    else {
+      option1PayoutWeight = SafeMath.mul(option1TotalAmountWagered, option2TotalAmountWagered);
+      option2PayoutWeight = SafeMath.div(option2TotalAmountWagered, SafeMath.add(option1TotalAmountWagered, 1));
+    }
+
+    if (option1PayoutWeight > bettingEvent.option1PayoutOdds) {
+      uint absoluteDifference = SafeMath.sub(option1PayoutWeight, bettingEvent.option1PayoutOdds);
+      uint option1PayoutOddsAdjustment = absoluteDifference < payoutOddsAdjustmentCeiling ? absoluteDifference : payoutOddsAdjustmentCeiling;
+
+      bettingEvent.option1PayoutOdds -= option1PayoutOddsAdjustment;
+    } else {
+      uint absoluteDifference = SafeMath.sub(bettingEvent.option1PayoutOdds, option1PayoutWeight);
+      uint option1PayoutOddsAdjustment = absoluteDifference < payoutOddsAdjustmentCeiling ? absoluteDifference : payoutOddsAdjustmentCeiling;
+
+      bettingEvent.option1PayoutOdds += option1PayoutOddsAdjustment;
+    }
+
+    if (option2PayoutWeight > bettingEvent.option2PayoutOdds) {
+      uint absoluteDifference = SafeMath.sub(option2PayoutWeight, bettingEvent.option2PayoutOdds);
+      uint option2PayoutOddsAdjustment = absoluteDifference < payoutOddsAdjustmentCeiling ? absoluteDifference : payoutOddsAdjustmentCeiling;
+
+      bettingEvent.option2PayoutOdds -= option2PayoutOddsAdjustment;
+    } else {
+      uint absoluteDifference = SafeMath.sub(bettingEvent.option2PayoutOdds, option2PayoutWeight);
+      uint option2PayoutOddsAdjustment = absoluteDifference < payoutOddsAdjustmentCeiling ? absoluteDifference : payoutOddsAdjustmentCeiling;
+
+      bettingEvent.option2PayoutOdds += option2PayoutOddsAdjustment;
+    }
   }
 
   function placeBet(uint _eventId, uint _option) external payable {
