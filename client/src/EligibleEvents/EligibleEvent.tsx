@@ -13,6 +13,7 @@ type Props = {
   option2: string;
   payoutOdds: [number, number];
   startTime: BigNumber;
+  verified?: boolean;
 };
 
 export const EligibleEvent = ({
@@ -22,11 +23,12 @@ export const EligibleEvent = ({
   option2,
   payoutOdds,
   startTime,
+  verified,
 }: Props) => {
   const [option, setOption] = useState('');
   const [amount, setAmount] = useState('');
 
-  const placeBet = async (event: React.FormEvent) => {
+  const placeBet = (event: React.FormEvent) => {
     event.preventDefault();
 
     addBet(eventId, option, utils.parseEther(amount), payoutOdds);
@@ -52,6 +54,7 @@ export const EligibleEvent = ({
     <div>
       <form onSubmit={placeBet}>
         <Card>
+          {verified === false && 'Pending!'}
           <CardHeader>{formattedDate}</CardHeader>
           <CardBody>
             <label htmlFor={`${eventId}-option1`}>

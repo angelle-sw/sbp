@@ -1,21 +1,25 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import getSbpContract from './sbp';
+import { addEvent } from './redux/actions';
 import { DebugInfo } from './DebugInfo';
 
-export const AddEvent = () => {
+type Props = {
+  addEvent: typeof addEvent;
+  eligibleEventsCount: number;
+};
+
+export const AddEvent = ({ addEvent, eligibleEventsCount }: Props) => {
   const navigate = useNavigate();
 
   const [option1, setOption1] = useState('');
   const [option2, setOption2] = useState('');
   const [startTime, setStartTime] = useState('');
 
-  const addEvent = async (event: React.FormEvent) => {
+  const addNewEvent = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const sbp = await getSbpContract();
+    addEvent(eligibleEventsCount + 1, option1, option2, 0, [1, 1], 1614643200);
 
-    await sbp.addEvent(option1, option2, 1614643200);
     setOption1('');
     setOption2('');
     setStartTime('');
@@ -24,7 +28,7 @@ export const AddEvent = () => {
   return (
     <div>
       Add Event
-      <form onSubmit={addEvent}>
+      <form onSubmit={addNewEvent}>
         <div>
           <label>Option 1</label>
           <input onChange={event => setOption1(event.target.value)} value={option1} />

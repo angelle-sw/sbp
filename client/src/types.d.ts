@@ -16,11 +16,13 @@ type UnclaimedBetsResponse = {
 
 type EligibleEvent = {
   eventId: number;
+  hash?: string;
   option1: string;
   option2: string;
   payoutOdds: [number, number];
   result: number;
   startTime: BigNumber;
+  verified?: boolean;
 };
 
 type EligibleEvents = EligibleEvent[];

@@ -12,7 +12,7 @@ export const EligibleEvents = ({ addBet, eligibleEvents }: Props) => {
       <h3>Future Events</h3>
       <div>
         {eligibleEvents.map(
-          ({ eventId, option1, option2, payoutOdds, startTime }: EligibleEvent) => (
+          ({ eventId, option1, option2, payoutOdds, startTime, verified }: EligibleEvent) => (
             <EligibleEvent
               addBet={addBet}
               eventId={eventId}
@@ -21,6 +21,7 @@ export const EligibleEvents = ({ addBet, eligibleEvents }: Props) => {
               option2={option2}
               payoutOdds={payoutOdds}
               startTime={startTime}
+              verified={verified}
             />
           )
         )}
