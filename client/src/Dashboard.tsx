@@ -3,13 +3,14 @@ import { EligibleEvents } from './EligibleEvents/EligibleEvents';
 import './Dashboard.css';
 
 type Props = {
+  addBet: AddBet;
   bets: Bet[];
   eligibleEvents: EligibleEvent[];
 };
 
-export const Dashboard = ({ bets, eligibleEvents }: Props) => (
+export const Dashboard = ({ addBet, bets, eligibleEvents }: Props) => (
   <div className="dashboard">
     <Bets bets={bets} />
-    <EligibleEvents eligibleEvents={eligibleEvents} />
+    <EligibleEvents addBet={addBet} eligibleEvents={eligibleEvents} />
   </div>
 );

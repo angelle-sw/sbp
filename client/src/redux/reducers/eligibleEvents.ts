@@ -4,7 +4,7 @@ import { GET_ELIGIBLE_EVENTS_REQUEST, GET_ELIGIBLE_EVENTS_SUCCESS } from '../act
 type State = {
   error?: Error;
   loading: boolean;
-  data: EligibleEventResponse[];
+  data: EligibleEvent[];
 };
 
 const initialState: State = {

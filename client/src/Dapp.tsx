@@ -1,15 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { utils } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
-import { getBets, getEligibleEvents } from './redux/actions';
 import getSbpContract from './sbp';
+import { addBet, getBets, getEligibleEvents, verifyBet } from './redux/actions';
 import { useCheckWallet, useContractOwner } from './hooks';
 import { WrongNetwork } from './WrongNetwork';
 import { Header } from './Header';
 import { Dashboard } from './Dashboard';
-import { transformBets, transformEvents } from './selectors';
 import './Dapp.css';
 
 const injectedConnector = new InjectedConnector({
@@ -22,13 +20,15 @@ const injectedConnector = new InjectedConnector({
 });
 
 type Props = {
+  addBet: AddBet;
   bets: Bet[];
   eligibleEvents: EligibleEvent[];
   getBets: () => void;
   getEligibleEvents: () => void;
+  verifyBet: (hash: string) => void;
 };
 
-const Dapp = ({ bets, eligibleEvents, getBets, getEligibleEvents }: Props) => {
+const Dapp = ({ addBet, bets, eligibleEvents, getBets, getEligibleEvents, verifyBet }: Props) => {
   const owner = useContractOwner();
   const { account, activate, active, chainId, error } = useWeb3React();
   const { connectErrorMessage, loading } = useCheckWallet(active, chainId, error);
@@ -46,26 +46,22 @@ const Dapp = ({ bets, eligibleEvents, getBets, getEligibleEvents }: Props) => {
     activate(injectedConnector);
   }, [account, activate, chainId]);
 
-  // useEffect(() => {
-  //   if (account) {
-  //     (async () => {
-  //       const sbp = await getSbpContract();
+  useEffect(() => {
+    if (account) {
+      (async () => {
+        const sbp = await getSbpContract();
 
-  //       sbp.on('NewBet', async (betId, sender, eventId, option, payoutOdds, amount) => {
-  //         if (sender === account) {
-  //           const newBet = {
-  //             amount: utils.formatEther(amount),
-  //             eventId: Number(eventId),
-  //             option: Number(option),
-  //             payoutOdds,
-  //           };
-
-  //           setBets(prev => [...prev, newBet]);
-  //         }
-  //       });
-  //     })();
-  //   }
-  // }, [account]);
+        sbp.on(
+          'NewBet',
+          async (betId, sender, eventId, option, payoutOdds, amount, result, event) => {
+            if (sender === account) {
+              verifyBet(event.transactionHash);
+            }
+          }
+        );
+      })();
+    }
+  }, [account]);
 
   // useEffect(() => {
   //   (async () => {
@@ -95,16 +91,21 @@ const Dapp = ({ bets, eligibleEvents, getBets, getEligibleEvents }: Props) => {
   return (
     <div className="App">
       <Header account={account} owner={owner} />
-      <Dashboard bets={bets} eligibleEvents={eligibleEvents} />
+      <Dashboard addBet={addBet} bets={bets} eligibleEvents={eligibleEvents} />
     </div>
   );
 };
 
-const mapStateToProps = (state: ReduxState) => {
-  return {
-    bets: transformBets(state),
-    eligibleEvents: transformEvents(state),
-  };
-};
+const mapStateToProps = (state: ReduxState) => ({
+  bets: state.bets.data,
+  eligibleEvents: state.eligibleEvents.data,
+});
 
-export default connect(mapStateToProps, { getBets, getEligibleEvents })(Dapp);
+export default connect(mapStateToProps, {
+  addBet,
+  getBets,
+  getEligibleEvents,
+  verifyBet,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+})(Dapp);

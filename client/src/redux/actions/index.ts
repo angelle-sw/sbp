@@ -1,4 +1,12 @@
-import { getBets, getBetsSuccess } from './bets';
+import { addBet, addPendingBet, getBets, getBetsSuccess, verifyBet } from './bets';
 import { getEligibleEvents, getEligibleEventsSuccess } from './eligibleEvents';
 
-export { getBets, getBetsSuccess, getEligibleEvents, getEligibleEventsSuccess };
+export {
+  addBet,
+  addPendingBet,
+  getBets,
+  getBetsSuccess,
+  getEligibleEvents,
+  getEligibleEventsSuccess,
+  verifyBet,
+};

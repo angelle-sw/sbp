@@ -2,29 +2,34 @@ import { useMemo, useState } from 'react';
 import { BigNumber, utils } from 'ethers';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns-tz/format';
-import getSbpContract from '../sbp';
 import { Card, CardHeader, CardBody, CardFooter } from '../Card';
 import { EligibleEventOption } from './EligibleEventOption';
 import './EligibleEvent.css';
 
 type Props = {
+  addBet: AddBet;
   eventId: number;
   option1: string;
   option2: string;
+  payoutOdds: [number, number];
   startTime: BigNumber;
 };
 
-export const EligibleEvent = ({ eventId, option1, option2, startTime }: Props) => {
+export const EligibleEvent = ({
+  addBet,
+  eventId,
+  option1,
+  option2,
+  payoutOdds,
+  startTime,
+}: Props) => {
   const [option, setOption] = useState('');
   const [amount, setAmount] = useState('');
 
   const placeBet = async (event: React.FormEvent) => {
     event.preventDefault();
-    const sbp = await getSbpContract();
 
-    await sbp.placeBet(eventId, option, {
-      value: utils.parseEther(amount),
-    });
+    addBet(eventId, option, utils.parseEther(amount), payoutOdds);
 
     setOption('');
     setAmount('');
