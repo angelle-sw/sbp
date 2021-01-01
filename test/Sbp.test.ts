@@ -183,26 +183,27 @@ contract('Sbp', accounts => {
   it('should adjust event payout odds after bet is placed', async () => {
     const instance = await Sbp.new();
 
-    const betAmount = web3.utils.toWei('0.2');
-
     await instance.addEvent.sendTransaction('nba', 'Charlotte', 'OKC', 32534524800);
+
     await instance.placeBet.sendTransaction(0, 1, {
       from: accounts[1],
-      value: betAmount,
+      value: web3.utils.toWei('0.2'),
     });
 
-    const event = await instance.getEvent(0);
+    const eventAfterBet1 = await instance.getEvent(0);
 
-    console.log(event);
+    console.log('event after bet 1');
+    console.log(eventAfterBet1);
 
     await instance.placeBet.sendTransaction(0, 2, {
       from: accounts[1],
-      value: betAmount,
+      value: web3.utils.toWei('0.2'),
     });
 
-    const event2 = await instance.getEvent(0);
+    const eventAfterBet2 = await instance.getEvent(0);
 
-    console.log(event2);
+    console.log('event after bet 2');
+    console.log(eventAfterBet2);
   });
 
   it('should get bets', async () => {

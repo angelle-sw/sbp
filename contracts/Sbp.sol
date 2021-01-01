@@ -115,7 +115,7 @@ contract Sbp is Ownable {
     if (totalPayoutAmount > SafeMath.mul(oneEther, 10000)) {
       payoutOddsAdjustmentCeiling = 100000000;
     }
-    if (totalPayoutAmount > SafeMath.mul(oneEther, 1000)) {
+    else if (totalPayoutAmount > SafeMath.mul(oneEther, 1000)) {
       payoutOddsAdjustmentCeiling = 10000000;
     }
     else if (totalPayoutAmount > SafeMath.mul(oneEther, 100)) {
