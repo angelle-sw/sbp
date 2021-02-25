@@ -6,7 +6,7 @@ require('ts-node').register({
   files: true,
 });
 
-const { TEST_ENDPOINT, WALLET_INDEX, WALLET_MNEMONIC, ETHEREUM_NETWORK } = process.env;
+const { TEST_ENDPOINT_MOONBEAM, WALLET_INDEX, WALLET_MNEMONIC, ETHEREUM_NETWORK } = process.env;
 
 module.exports = {
   contracts_build_directory: `./build/contracts/${ETHEREUM_NETWORK}`,
@@ -20,15 +20,15 @@ module.exports = {
       provider: () =>
         new HDWalletProvider({
           mnemonic: WALLET_MNEMONIC,
-          providerOrUrl: TEST_ENDPOINT,
+          providerOrUrl: TEST_ENDPOINT_MOONBEAM,
           addressIndex: WALLET_INDEX,
         }),
-      network_id: 3,
+      network_id: 1287,
     },
   },
   compilers: {
     solc: {
-      version: '0.7.4'
+      version: '0.7.4',
     },
   },
   plugins: ['solidity-coverage'],

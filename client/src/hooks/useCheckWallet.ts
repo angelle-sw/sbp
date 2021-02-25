@@ -6,7 +6,7 @@ const checkNetwork = (chainId: number | undefined) => {
     return 'Wrong Chain ID. Set your wallet network to your local network.';
   }
 
-  if (ETHEREUM_NETWORK === 'testnet' && chainId !== 3) {
+  if (ETHEREUM_NETWORK === 'testnet' && chainId !== 1287) {
     return 'Wrong Chain ID. Set your wallet network to the Ropsten network.';
   }
 

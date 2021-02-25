@@ -20,13 +20,13 @@ import { Header } from './Header';
 import { Dashboard } from './Dashboard';
 import { AddEvent } from './AddEvent';
 import './Dapp.css';
-import sbp from './sbp';
 
 const injectedConnector = new InjectedConnector({
   supportedChainIds: [
     1, // Mainnet
     3, // Ropsten
     4, // Rinkeby
+    1287, // Moonbeam
     5777, // Ganache
   ],
 });
