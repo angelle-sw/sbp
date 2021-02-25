@@ -1,0 +1,48 @@
+name: Pull Request
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install contract dependencies
+        run: yarn
+      - name: Test contract
+        run: yarn test:ci
+      - name: Install client dependencies
+        run: cd client && yarn
+      - name: Lint web app
+        run: cd client && yarn lint
+      - name: Test web app
+        run: cd client && yarn test
+  deploy-to-playground:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install client dependencies
+        run: cd client && yarn
+      - name: Install contract dependencies
+        run: yarn
+      - name: Deploy contract to testnet
+        env:
+          TEST_ENDPOINT_MOONBEAM: ${{ secrets.TEST_ENDPOINT_MOONBEAM }}
+          WALLET_MNEMONIC: ${{ secrets.WALLET_MNEMONIC }}
+          WALLET_INDEX: ${{ secrets.WALLET_INDEX }}
+        run: yarn migrate:testnet
+      - name: Build
+        run: cd client && yarn build
+      - name: Deploy
+        uses: nwtgck/actions-netlify@v1.1.11
+        with:
+          deploy-message: ${{ github.event.pull_request.title }}
+          enable-pull-request-comment: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          publish-dir: 'client/build'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
